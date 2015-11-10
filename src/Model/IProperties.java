@@ -51,36 +51,4 @@ public interface IProperties {
 	
 	boolean assertEventTypeDigitsLength(String value);
 	
-//	int getDateDigitsLength();
-//	
-//	int getTimeDigitsLength();
-//	
-//	int getStartDigitsLength();
-//	
-//	int getDurationDigitsLength();
-//	
-//	int getBrkDigitsLength();
-//	
-//	int getPosDigitsLength();
-//	
-//	int getLengthDigitsLength();
-//	
-//	int getActualTimeDigitsLength();
-//	
-//	int getActualLengthDigitsLength();
-//	
-//	int getActualPosDigitsLength();
-//	
-//	int getAdNameDigitsLength();
-//	
-//	int getStatusCodeDigitsLength();
-//	
-//	int getStatAdvertiserNameDigitsLength();
-//	
-//	int getStatAdvertiserSpotNameDigitsLength();
-//	
-//	int getEventTypeDigitsLength();
-	
-	
-	
 }

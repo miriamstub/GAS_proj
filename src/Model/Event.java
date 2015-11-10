@@ -1,6 +1,8 @@
 package Model;
 
 
+import global.Manager;
+
 import java.util.*;
 
 /**
@@ -29,7 +31,7 @@ public class Event {
 		this.window = new Window(start, duration, brk, pos, length);
 		setAdName(adName);
 		setEventType(eventType);
-		this.ID = getUUID();
+		this.ID = Manager.getUUID();
 	}
 
 
@@ -87,19 +89,4 @@ public class Event {
 				+ ", actual=" + actual + ", adName=" + adName + ", stat="
 				+ stat + ", eventType=" + eventType + ", ID=" + ID + "]";
 	}
-	
-//TODO move to manager class----	
-public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>();
-public UUID getUUID(){
-	UUID uuid = UUID.randomUUID();
-	while(UUIDPool.containsKey(uuid)){
-		uuid = UUID.randomUUID();
-		System.out.println("Duplicate UUID!!!");
-	}
-	UUIDPool.put(uuid, "");
-	return uuid;
-}
-
-
-
 }

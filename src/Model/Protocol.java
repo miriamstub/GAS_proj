@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public abstract class Protocol {
 	
-	private String fileName;
+	private String protocolName;
 	private ProtocolType protocolType;
 	private Map<UUID, Event> eventMap;
 	private Map<String, Avail> availMap;
@@ -17,17 +17,17 @@ public abstract class Protocol {
 	
 	public Protocol(String fileName, ProtocolType protocolType,
 			Map<UUID, Event> eventMap, Map<String, Avail> availMap) {
-		this.fileName = fileName;
+		this.protocolName = fileName;
 		this.protocolType = protocolType;
 		this.eventMap = eventMap;
 		this.availMap = availMap;
 	}
 	
 	public String getFileName() {
-		return fileName;
+		return protocolName;
 	}
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+		this.protocolName = fileName;
 	}
 	public Map<UUID, Event> getEventMap() {
 		return eventMap;
@@ -48,6 +48,4 @@ public abstract class Protocol {
 		this.protocolType = protocolType;
 	}
 	
-	
-
 }

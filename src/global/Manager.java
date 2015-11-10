@@ -52,5 +52,18 @@ public class Manager {
 	public Map<UUID, Event> getAllEvents(String fileName) {
 		return filesList.get(fileName).getEventMap();
 	}
+	
+	
+	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>();//TODO discuss pool type
+	
+	public static UUID getUUID(){
+		UUID uuid = UUID.randomUUID();
+		while(UUIDPool.containsKey(uuid)){
+			uuid = UUID.randomUUID();
+			System.out.println("Duplicate UUID!!!");
+		}
+		UUIDPool.put(uuid, "");
+		return uuid;
+	}
 
 }

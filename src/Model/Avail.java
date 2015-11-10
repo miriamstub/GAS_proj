@@ -45,10 +45,4 @@ public class Avail {
 		this.leftDuration = leftDuration;
 	}
 	
-	
-	
-	
-	
-	
-	
 }

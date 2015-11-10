@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
-import Deserializer.Deserializer;
+import Deserializer.CCMSDeserializer;
 import Model.Avail;
 import Model.Event;
 import Model.EventType;
@@ -145,7 +145,7 @@ public class GeneratorAPI {
 	 * Deserialize the object model.
 	 */
 	public static void deserializer() {
-		Deserializer.run();
+		CCMSDeserializer.getInstance().run();
 	}
 
 }
