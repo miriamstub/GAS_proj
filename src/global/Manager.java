@@ -5,6 +5,10 @@ import java.util.Map;
 
 import Model.Protocol;
 
+import java.util.UUID;
+
+import Model.Event;
+
 /**
  * This class hold the tree of all the objects. singleton class.
  * Manager -> filesList -> availsList + eventsList.
@@ -34,4 +38,19 @@ public class Manager {
 		}
 		return instance;
 	}
+	
+	public void addProtocol(Protocol protocol) {
+		filesList.put(protocol.getFileName(), protocol);
+	}
+	
+	public void deleteProtocol(Protocol protocol) {
+		protocol.getAvailMap().clear();
+		protocol.getEventMap().clear();
+		filesList.remove(protocol);
+	}
+	
+	public Map<UUID, Event> getAllEvents(String fileName) {
+		return filesList.get(fileName).getEventMap();
+	}
+
 }
