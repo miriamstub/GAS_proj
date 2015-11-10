@@ -2,8 +2,11 @@ package global;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import Model.Event;
 import Model.Protocol;
+import Model.SchDay;
 
 /**
  * This class hold the tree of all the objects. singleton class.
@@ -33,6 +36,20 @@ public class Manager {
 			instance = new Manager();
 		}
 		return instance;
+	}
+	
+	public void addProtocol(Protocol protocol) {
+		filesList.put(protocol.getFileName(), protocol);
+	}
+	
+	public void deleteProtocol(Protocol protocol) {
+		protocol.getAvailMap().clear();
+		protocol.getEventMap().clear();
+		filesList.remove(protocol);
+	}
+	
+	public Map<UUID, Event> getAllEvents(String fileName) {
+		return filesList.get(fileName).getEventMap();
 	}
 
 }
