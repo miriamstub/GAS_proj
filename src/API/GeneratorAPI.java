@@ -17,16 +17,21 @@ import Serializer.Serializer;
 import global.Manager;
 import log.Log;
 
+/**
+ * CRUD functions
+ * @author rtolidan
+ *
+ */
 public class GeneratorAPI {
 
-	Logger logger = Log.getInstance();
-	Map<String, Protocol> filesList = Manager.getInstance().getFilesList();
+	static Logger logger = Log.getInstance();
+	static Map<String, Protocol> filesList = Manager.getInstance().getFilesList();
 	
 	// TODO change to ... (create + modify)
 	
 	// called from de...
 	// I have the file object, not need the all params...
-	public Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName) {
+	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName) {
 		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, fileName, null, null, null, null)) {
 			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
 			filesList.get(fileName).getEventMap().put(newEvent.getID(), newEvent);
@@ -37,7 +42,7 @@ public class GeneratorAPI {
 	
 	// called from API
 	// do not know if there is a new file or older - get ID and all params
-	public Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
+	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
 		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, fileName, protocolType, protocolDate, protocolZone, protocolChannel)) {
 			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
 			filesList.get(fileName).getEventMap().put(newEvent.getID(), newEvent);
@@ -66,7 +71,7 @@ public class GeneratorAPI {
 	 * @param {String} protocolChannel
 	 * @return {Event} the modified event
 	 */
-	public Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
+	public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
 		Event event = filesList.get(fileName).getEventMap().get(eventId); // get the event from his file
 		if (event == null) {
 			logger.error("The event does not exist");
@@ -97,7 +102,7 @@ public class GeneratorAPI {
 	 * @param {String} fileName
 	 * @param {UUID} eventId
 	 */
-	public void deleteEvent(String fileName, UUID eventId) {
+	public static void deleteEvent(String fileName, UUID eventId) {
 		Event event = filesList.get(fileName).getEventMap().get(eventId);
 		if (event == null) {
 			logger.error("The event does not exist");
@@ -125,21 +130,21 @@ public class GeneratorAPI {
 	/**
 	 * 
 	 */
-	public void deleteDay() {
+	public static void deleteDay() {
 
 	}
 
 	/**
 	 * Serialize the files.
 	 */
-	public void serializer() {
+	public static void serializer() {
 		Serializer.run();
 	}
 	
 	/**
 	 * Deserialize the object model.
 	 */
-	public void deserializer() {
+	public static void deserializer() {
 		Deserializer.run();
 	}
 

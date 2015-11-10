@@ -16,6 +16,11 @@ import Model.SchDay;
 import Model.Window;
 import log.Log;
 
+/**
+ * Helper for API functions.
+ * @author rtolidan
+ *
+ */
 public class APIHelper {
 
 	static Logger logger = Log.getInstance();
