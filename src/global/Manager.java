@@ -1,9 +1,11 @@
+package global;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This class hold the tree of all the objects. singleton class.
- * ManageTree -> filesList -> availsList + eventsList.
+ * Manager -> filesList -> availsList + eventsList.
  * @author rtolidan
  *
  */
