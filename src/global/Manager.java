@@ -3,6 +3,8 @@ package global;
 import java.util.HashMap;
 import java.util.Map;
 
+import Model.Protocol;
+
 /**
  * This class hold the tree of all the objects. singleton class.
  * Manager -> filesList -> availsList + eventsList.
@@ -32,5 +34,4 @@ public class Manager {
 		}
 		return instance;
 	}
-
 }
