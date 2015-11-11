@@ -13,8 +13,8 @@ public final class ValidateUtils {
 
 	private static IProperties iproperties;
 
-	public static void setIProperties(ProtocolType protocolType){
-		iproperties = getPropertiesClass(protocolType);
+	public static void setIProperties(SchedulerInfoType schInfoType){
+		iproperties = getPropertiesClass(schInfoType);
 	}
 
 	public static Date getDate(String date) {
@@ -79,19 +79,15 @@ public final class ValidateUtils {
 			return null;
 	}
 
-	public static String getStat(String stat) {//TODO
-		if( iproperties.assertStatusCodeDigitsLength(stat))
-			return stat;
-		else
-			return null;
-		//return iproperties.getStatAdvertiserNameDigitsLength() +  iproperties.getStatAdvertiserSpotNameDigitsLength() + iproperties.getStatusCodeDigitsLength() == stat.length();
-	}
-
 	public static EventType getEventType(String eventType) {//maybe to check if value exist in enum
 		if(iproperties.assertEventTypeDigitsLength(eventType))
 			return EventType.valueOf(EventType.getNameByValue(eventType));
 		else
 			return null;
+	}
+	
+	public static boolean isValidStatusCode(String statusCode) {
+		return iproperties.assertStatusCodeDigitsLength(statusCode);
 	}
 
 	public static boolean isValidActualTime(String actualTime) {
@@ -107,7 +103,7 @@ public final class ValidateUtils {
 	}
 
 
-	//TODO protocol date
+	//TODO schDay date
 	//	public static boolean isValidFileDate(String date) {
 	//			return /*ModelUtils.*/isValidFormat(DateFormats.Mdd,date);//the month in letter!!!!!!!!!!SOS
 	//	}
@@ -137,9 +133,9 @@ public final class ValidateUtils {
 	}
 
 
-	public static IProperties getPropertiesClass(ProtocolType protocolType){
+	public static IProperties getPropertiesClass(SchedulerInfoType schInfoType){
 		IProperties propertiesClass = null;
-		switch (protocolType) {
+		switch (schInfoType) {
 		case CCMS:
 			propertiesClass = new CCMSProperties();
 			break;

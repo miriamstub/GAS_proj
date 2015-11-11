@@ -10,8 +10,8 @@ import org.apache.log4j.Logger;
 import Model.Avail;
 import Model.Event;
 import Model.EventType;
-import Model.Protocol;
-import Model.ProtocolType;
+import Model.SchedulerInfo;
+import Model.SchedulerInfoType;
 import Model.SchDay;
 import Model.Window;
 import log.Log;
@@ -29,7 +29,7 @@ public class APIHelper {
 		 return date1.before(date2) || date1.after(date2);
 	}
 
-	static boolean validateParams(Date eventTime, EventType eventType, Date windowLength, Date windowDuration, int windowBrk, Date windowStart, int windowPos, Map<String, Protocol> filesList,  String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
+	static boolean validateParams(Date eventTime, EventType eventType, Date windowLength, Date windowDuration, int windowBrk, Date windowStart, int windowPos, Map<String, SchedulerInfo> filesList,  String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
 
 		if (windowLength.compareTo(windowDuration) == 1) {
 			logger.log(null, "The event length is bigger than the window duration");
@@ -43,11 +43,11 @@ public class APIHelper {
 		}	
 
 		// handle avail
-		Avail avail = filesList.get(fileName).getAvailMap().get(windowStart.getTime() + windowDuration.getTime());
+		Avail avail = filesList.get(schInfoName).getAvailMap().get(windowStart.getTime() + windowDuration.getTime());
 
 		if (avail == null ) { // There is no existing avail 
 			Avail newAvail = new Avail(windowStart, new Date(windowStart.getTime() + windowDuration.getTime()), windowDuration.getTime());
-			avail = filesList.get(fileName).getAvailMap().put(windowStart.toString() + windowDuration.toString(), newAvail);
+			avail = filesList.get(schInfoName).getAvailMap().put(windowStart.toString() + windowDuration.toString(), newAvail);
 		} else { // exist avail
 			if (avail.getLeftDuration() < windowLength.getTime()) {
 				logger.log(null, "The event length is bigger than the left window duration");
@@ -59,18 +59,18 @@ public class APIHelper {
 
 		// TODO modify file!!
 		
-		// handle protocol
-		Protocol protocol = filesList.get(fileName);
-		if(protocol == null) { // create a new file
-			if(protocolType == ProtocolType.CCMS || protocolType == ProtocolType.SCTE118) {
-				protocol = new SchDay(fileName, protocolType, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), protocolDate, protocolZone, protocolChannel);
+		// handle SchedulerInfo
+		SchedulerInfo schInfo = filesList.get(schInfoName);
+		if(schInfo == null) { // create a new file
+			if(schInfoType == SchedulerInfoType.CCMS || schInfoType == SchedulerInfoType.SCTE118) {
+				schInfo = new SchDay(schInfoName, schInfoType, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), protocolDate, protocolZone, protocolChannel);
 			}
-			filesList.put(fileName, protocol);
+			filesList.put(schInfoName, schInfo);
 			return true; // if the file is new, we don't have to check his break position and etc.
 		}
 
-		protocol.getAvailMap();
-		for (Event event : protocol.getEventMap().values()) {
+		schInfo.getAvailMap();
+		for (Event event : schInfo.getEventMap().values()) {
 			Window window = event.getWindow();
 			if (eventType == EventType.SCHEDULED && window.getBrk() == windowBrk && window.getDuration() == windowDuration && window.getPos() == windowPos && window.getStart() == windowStart 
 					|| eventType == EventType.FILL && event.getTime() == eventTime) { // duplicate, reject

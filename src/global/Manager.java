@@ -3,7 +3,7 @@ package global;
 import java.util.HashMap;
 import java.util.Map;
 
-import Model.Protocol;
+import Model.SchedulerInfo;
 
 import java.util.UUID;
 
@@ -19,16 +19,16 @@ public class Manager {
 
 	static Manager instance = null;
 
-	private Map<String, Protocol> filesList = new HashMap<>();
+	private Map<String, SchedulerInfo> filesList = new HashMap<>();
 	
 	private Manager() {
 	}
 
-	public Map<String, Protocol> getFilesList() {
+	public Map<String, SchedulerInfo> getFilesList() {
 		return filesList;
 	}
 
-	public void setFilesList(Map<String, Protocol> tree) {
+	public void setFilesList(Map<String, SchedulerInfo> tree) {
 		this.filesList = tree;
 	}
 
@@ -39,18 +39,18 @@ public class Manager {
 		return instance;
 	}
 	
-	public void addProtocol(Protocol protocol) {
-		filesList.put(protocol.getFileName(), protocol);
+	public void addSchedulerInfo(SchedulerInfo schInfo) {
+		filesList.put(schInfo.getSchInfoName(), schInfo);
 	}
 	
-	public void deleteProtocol(Protocol protocol) {
-		protocol.getAvailMap().clear();
-		protocol.getEventMap().clear();
-		filesList.remove(protocol);
+	public void deleteSchedulerInfo(SchedulerInfo schInfo) {
+		schInfo.getAvailMap().clear();
+		schInfo.getEventMap().clear();
+		filesList.remove(schInfo);
 	}
 	
-	public Map<UUID, Event> getAllEvents(String fileName) {
-		return filesList.get(fileName).getEventMap();
+	public Map<UUID, Event> getAllEvents(String schInfoName) {
+		return filesList.get(schInfoName).getEventMap();
 	}
 	
 	
