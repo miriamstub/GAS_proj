@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import Model.Event;
 import Model.EventType;
-import Model.ProtocolType;
+import Model.SchedulerInfoType;
 import global.Manager;
 import junit.framework.TestCase;
 
@@ -52,21 +52,21 @@ public class APITest extends TestCase {
 			e2.printStackTrace();
 		}
 		
-		Event correctSceEvent = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctSceEvent = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctSceEvent.getID() + "!!!");
 		assertNotNull(correctSceEvent);
 
 		// duplicate event
-		Event duplicateSceEvent = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event duplicateSceEvent = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("reject!!!");
 		assertNull(duplicateSceEvent);
 		
-		Event correctFillEvent = GeneratorAPI.createEvent(new Date(), eventTime, "event", EventType.FILL, start, dur, 1, 1, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctFillEvent = GeneratorAPI.createEvent(new Date(), eventTime, "event", EventType.FILL, start, dur, 1, 1, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctFillEvent.getID() + "!!!");
 		assertNotNull(correctFillEvent);
 
 		// duplicate event
-		Event duplicateFillEvent = GeneratorAPI.createEvent(new Date(), eventTime, "event", EventType.FILL, start, dur, 1, 1, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event duplicateFillEvent = GeneratorAPI.createEvent(new Date(), eventTime, "event", EventType.FILL, start, dur, 1, 1, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("reject!!!");
 		assertNull(duplicateFillEvent);
 		
@@ -79,7 +79,7 @@ public class APITest extends TestCase {
 			e.printStackTrace();
 		}
 		
-		Event lengthGreaterThanDur = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len2, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event lengthGreaterThanDur = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len2, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("reject!!!");
 		assertNull(lengthGreaterThanDur);
 
@@ -87,7 +87,7 @@ public class APITest extends TestCase {
 		assertEquals(manager.getAllEvents("file").size(), 2);
 		
 		// duplicate event on another file
-		Event correctSceEventForNewFile = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len, "file2", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctSceEventForNewFile = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 1, len, "file2", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctSceEventForNewFile.getID() + "!!!");
 		assertNotNull(correctSceEventForNewFile);
 		
@@ -96,21 +96,21 @@ public class APITest extends TestCase {
 		assertEquals(manager.getAllEvents("file").size(), 2);
 		assertEquals(manager.getAllEvents("file2").size(), 1);
 		
-		Event correctSceEvent2 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 2, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctSceEvent2 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 2, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctSceEvent2.getID() + "!!!");
 		assertNotNull(correctSceEvent2);
 		
-		Event correctSceEvent3 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 3, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctSceEvent3 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 3, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctSceEvent3.getID() + "!!!");
 		assertNotNull(correctSceEvent3);
 		
-		Event correctSceEvent4 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 4, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctSceEvent4 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 4, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctSceEvent4.getID() + "!!!");
 		assertNotNull(correctSceEvent4);
 		
 		assertEquals(manager.getAllEvents("file").size(), 5);
 		
-		Event correctSceEvent5 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 5, len, "file", ProtocolType.CCMS, new Date(), "zone", "channel");
+		Event correctSceEvent5 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 5, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("reject!!!");
 		assertNull(correctSceEvent5);
 

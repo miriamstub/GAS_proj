@@ -20,7 +20,7 @@ public enum EventType {
 
 	public static String getNameByValue(String value) {
 		for(EventType e : EventType.values()){
-			if(value == e.value) return e.name();
+			if(value.equals(e.value)) return e.name();
 		}
 		return null;
 	}

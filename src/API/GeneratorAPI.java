@@ -10,8 +10,8 @@ import Deserializer.CCMSDeserializer;
 import Model.Avail;
 import Model.Event;
 import Model.EventType;
-import Model.Protocol;
-import Model.ProtocolType;
+import Model.SchedulerInfo;
+import Model.SchedulerInfoType;
 import Model.Window;
 import Serializer.Serializer;
 import global.Manager;
@@ -25,16 +25,16 @@ import log.Log;
 public class GeneratorAPI {
 
 	static Logger logger = Log.getInstance();
-	static Map<String, Protocol> filesList = Manager.getInstance().getFilesList();
+	static Map<String, SchedulerInfo> filesList = Manager.getInstance().getFilesList();
 	
 	// TODO change to ... (create + modify)
 	
 	// called from de...
 	// I have the file object, not need the all params...
-	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName) {
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, fileName, null, null, null, null)) {
+	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName) {
+		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, null, null, null, null)) {
 			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
-			filesList.get(fileName).getEventMap().put(newEvent.getID(), newEvent);
+			filesList.get(schInfoName).getEventMap().put(newEvent.getID(), newEvent);
 			return newEvent;
 		}
 		return null;
@@ -42,10 +42,10 @@ public class GeneratorAPI {
 	
 	// called from API
 	// do not know if there is a new file or older - get ID and all params
-	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, fileName, protocolType, protocolDate, protocolZone, protocolChannel)) {
+	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
+		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
 			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
-			filesList.get(fileName).getEventMap().put(newEvent.getID(), newEvent);
+			filesList.get(schInfoName).getEventMap().put(newEvent.getID(), newEvent);
 			return newEvent;
 		}
 		return null;
@@ -64,21 +64,21 @@ public class GeneratorAPI {
 	 * @param {int} windowBrk
 	 * @param {int} windowPos
 	 * @param {Date} windowLength
-	 * @param {String} fileName
-	 * @param {ProtocolType} protocolType
+	 * @param {String} schInfoName
+	 * @param {SchedulerInfoType} schInfoType
 	 * @param {Date} protocolDate
 	 * @param {String} protocolZone
 	 * @param {String} protocolChannel
 	 * @return {Event} the modified event
 	 */
-	public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String fileName, ProtocolType protocolType, Date protocolDate, String protocolZone, String protocolChannel) {
-		Event event = filesList.get(fileName).getEventMap().get(eventId); // get the event from his file
+	public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
+		Event event = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
 		if (event == null) {
 			logger.error("The event does not exist");
 			return null;
 		}
 
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, fileName, protocolType, protocolDate, protocolZone, protocolChannel)) {
+		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
 			event.setAdName(adName);
 			event.setDate(eventDate);
 			event.setEventType(eventType);
@@ -102,8 +102,8 @@ public class GeneratorAPI {
 	 * @param {String} fileName
 	 * @param {UUID} eventId
 	 */
-	public static void deleteEvent(String fileName, UUID eventId) {
-		Event event = filesList.get(fileName).getEventMap().get(eventId);
+	public static void deleteEvent(String schInfoName, UUID eventId) {
+		Event event = filesList.get(schInfoName).getEventMap().get(eventId);
 		if (event == null) {
 			logger.error("The event does not exist");
 			return;
@@ -111,19 +111,19 @@ public class GeneratorAPI {
 
 		// handled sum duration
 		Window window = event.getWindow();
-		Avail avail = filesList.get(fileName).getAvailMap().get(window.getStart().getTime() + window.getDuration().getTime());
+		Avail avail = filesList.get(schInfoName).getAvailMap().get(window.getStart().getTime() + window.getDuration().getTime());
 		avail.setLeftDuration(avail.getLeftDuration() + window.getLength().getTime());
 		
 		// delete the avail if there is no events that use him.
 		if(avail.getLeftDuration() == (avail.getEndTime().getTime() - avail.getStartTime().getTime())) {
-			filesList.get(fileName).getAvailMap().remove(window.getStart().getTime() + window.getDuration().getTime());
+			filesList.get(schInfoName).getAvailMap().remove(window.getStart().getTime() + window.getDuration().getTime());
 		}
 		
 		// remove the event
-		filesList.get(fileName).getEventMap().remove(eventId);
+		filesList.get(schInfoName).getEventMap().remove(eventId);
 		// if the event is the last on this file - delete the file also.
-		if(filesList.get(fileName).getEventMap().size() == 0) {
-			filesList.remove(fileName);
+		if(filesList.get(schInfoName).getEventMap().size() == 0) {
+			filesList.remove(schInfoName);
 		}
 	}
 
