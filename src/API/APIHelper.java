@@ -30,7 +30,7 @@ public class APIHelper {
 		 return start1.before(end2) || start2.before(end1);
 	}
 
-	static boolean validateParams(Date eventTime, EventType eventType, Date windowLength, Date windowDuration, int windowBrk, Date windowStart, int windowPos, Map<String, SchedulerInfo> filesList,  String schInfoName, SchedulerInfoType SchedulerInfoType, Date SchedulerInfoDate, String SchedulerInfoZone, String SchedulerInfoChannel) {
+	static boolean validateParams(Date eventTime, EventType eventType, Date windowLength, Date windowDuration, int windowBrk, Date windowStart, int windowPos, Map<String, SchedulerInfo> filesList,  String schInfoName, SchedulerInfoType schedulerInfoType, Date schedulerInfoDate, String schedulerInfoZone, String schedulerInfoChannel) {
 
 		if (windowLength.compareTo(windowDuration) == 1) {
 			logger.error("The event length is bigger than the window duration");
@@ -40,8 +40,8 @@ public class APIHelper {
 		// handle SchedulerInfo
 		SchedulerInfo schInfo = filesList.get(schInfoName);
 		if (schInfo == null) { // create a new file
-			if(SchedulerInfoType == SchedulerInfoType.CCMS || SchedulerInfoType == SchedulerInfoType.SCTE118) {
-				schInfo = new SchDay(schInfoName, SchedulerInfoType, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), SchedulerInfoDate, SchedulerInfoZone, SchedulerInfoChannel);
+			if(schedulerInfoType == SchedulerInfoType.CCMS || schedulerInfoType == SchedulerInfoType.SCTE118) {
+				schInfo = new SchDay(schInfoName, schedulerInfoType, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), schedulerInfoDate, schedulerInfoZone, schedulerInfoChannel);
 			}
 			filesList.put(schInfoName, schInfo);
 		}
@@ -102,6 +102,7 @@ public class APIHelper {
 	    
 	   return cal.getTime();
 	}
-}
 
+
+}
 
