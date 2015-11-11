@@ -32,13 +32,13 @@ public class APIHelper {
 	static boolean validateParams(Date eventTime, EventType eventType, Date windowLength, Date windowDuration, int windowBrk, Date windowStart, int windowPos, Map<String, SchedulerInfo> filesList,  String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
 
 		if (windowLength.compareTo(windowDuration) == 1) {
-			logger.log(null, "The event length is bigger than the window duration");
+			logger.error("The event length is bigger than the window duration");
 			return false;
 		}
 
 		// check if the avail is overlapped.
 		if (isOverlapping(windowStart, new Date(windowStart.getTime() + windowDuration.getTime()))) {
-			logger.log(null, "There is overlapping on the avail dates");
+			logger.error("There is overlapping on the avail dates");
 			return false;
 		}	
 
@@ -50,7 +50,7 @@ public class APIHelper {
 			avail = filesList.get(schInfoName).getAvailMap().put(windowStart.toString() + windowDuration.toString(), newAvail);
 		} else { // exist avail
 			if (avail.getLeftDuration() < windowLength.getTime()) {
-				logger.log(null, "The event length is bigger than the left window duration");
+				logger.error("The event length is bigger than the left window duration");
 				return false;
 			}
 		}
@@ -74,7 +74,7 @@ public class APIHelper {
 			Window window = event.getWindow();
 			if (eventType == EventType.SCHEDULED && window.getBrk() == windowBrk && window.getDuration() == windowDuration && window.getPos() == windowPos && window.getStart() == windowStart 
 					|| eventType == EventType.FILL && event.getTime() == eventTime) { // duplicate, reject
-				logger.log(null, "duplicate event");
+				logger.error("duplicate event");
 				return false;
 			}
 		}
