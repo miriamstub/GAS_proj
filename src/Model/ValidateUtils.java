@@ -128,7 +128,6 @@ public final class ValidateUtils {
 		} catch (ParseException ex) {
 			ex.printStackTrace();
 		}
-		System.out.println(date != null?"VV":"XX");
 		return date;
 	}
 

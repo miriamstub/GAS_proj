@@ -1,6 +1,7 @@
 /API/
 /Deserializer/
 /Model/
+<<<<<<< HEAD
 /Serializer/
 /global/
 /hamcrest-core-1.3.jar
@@ -8,4 +9,7 @@
 /log/
 /log4j-1.2.15.jar
 /log4j.properties
+=======
+/log/
+>>>>>>> branch 'master' of https://github.com/miriamstub/GAS_proj.git
 /sandbox/
