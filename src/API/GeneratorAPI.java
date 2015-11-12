@@ -35,6 +35,7 @@ public class GeneratorAPI {
 		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, null, null, null, null)) {
 			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
 			filesList.get(schInfoName).getEventMap().put(newEvent.getID(), newEvent);
+			logger.info("Created event: " + newEvent.getID());
 			return newEvent;
 		}
 		return null;
@@ -46,6 +47,7 @@ public class GeneratorAPI {
 		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
 			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
 			filesList.get(schInfoName).getEventMap().put(newEvent.getID(), newEvent);
+			logger.info("Created event: " + newEvent.getID());
 			return newEvent;
 		}
 		return null;
@@ -112,10 +114,10 @@ public class GeneratorAPI {
 		// handled sum duration
 		Window window = event.getWindow();
 		Avail avail = filesList.get(schInfoName).getAvailMap().get(window.getStart().getTime() + window.getDuration().getTime());
-		avail.setLeftDuration(avail.getLeftDuration() + window.getLength().getTime());
+		avail.setLeftDuration(APIHelper.sumDates(avail.getLeftDuration(), window.getLength(), 1));
 		
 		// delete the avail if there is no events that use him.
-		if(avail.getLeftDuration() == (avail.getEndTime().getTime() - avail.getStartTime().getTime())) {
+		if(avail.getLeftDuration() == APIHelper.sumDates(avail.getEndTime(), avail.getStartTime(), -1)) {
 			filesList.get(schInfoName).getAvailMap().remove(window.getStart().getTime() + window.getDuration().getTime());
 		}
 		

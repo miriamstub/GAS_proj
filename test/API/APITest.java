@@ -113,7 +113,66 @@ public class APITest extends TestCase {
 		Event correctSceEvent5 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 5, len, "file", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("reject!!!");
 		assertNull(correctSceEvent5);
+		
+		// overlapped
+		// 10:00 - 10:20 - success!
+		Event correctSceEventNewFile = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, dur, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("created first event" + correctSceEventNewFile.getID() + "!!!");
+		assertNotNull(correctSceEventNewFile);
 
+		String timeInString5 = "10:10:00";
+		Date startOverlapped = null;
+		try {
+			startOverlapped = time.parse(timeInString5);
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		
+		// 10:10 - 10:20 - fail
+		Event ovverlapedSceEventNewFile1 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, startOverlapped, dur, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("reject!!!");
+		assertNull(ovverlapedSceEventNewFile1);
+		
+		String timeInString6 = "00:30:00";
+		Date endOverlapped = null;
+		try {
+			endOverlapped = time.parse(timeInString6);
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		
+		// 10:00 - 10:30 - fail
+		Event ovverlapedSceEventNewFile2 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, endOverlapped, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("reject!!!");
+		assertNull(ovverlapedSceEventNewFile2);
+		
+		// 10:10 - 10:30 - fail
+		Event ovverlapedSceEventNewFile3 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, startOverlapped, endOverlapped, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("reject!!!");
+		assertNull(ovverlapedSceEventNewFile3);
+		
+		// 10:10 - 10:30 - fail
+		Event ovverlapedSceEventNewFile4 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, start, startOverlapped, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("reject!!!");
+		assertNull(ovverlapedSceEventNewFile4);
+		
+		String timeInString7 = "09:50:00";
+		Date startOverlapped2 = null;
+		try {
+			startOverlapped2 = time.parse(timeInString7);
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		
+		// 09:50 - 10:10 - fail
+		Event ovverlapedSceEventNewFile5 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, startOverlapped2, endOverlapped, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("reject!!!");
+		assertNull(ovverlapedSceEventNewFile5);
+
+		// 09:50 - 09:55 - success!
+		Event correctSceEventNewFile2 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, startOverlapped2, len, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
+		System.out.println("created first event" + correctSceEventNewFile2.getID() + "!!!");
+		assertNotNull(correctSceEventNewFile2);
 	}
 
 }
