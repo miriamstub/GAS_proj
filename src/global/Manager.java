@@ -52,11 +52,11 @@ public class Manager {
 	
 	public ArrayList<Event> getAllEvents(String schInfoName) {
 		
-		return new ArrayList<Event>(filesList.get(schInfoName +".txt").getEventMap().values());
+		return new ArrayList<Event>(filesList.get(schInfoName).getEventMap().values());
 	}
 	
 	
-	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>();//TODO discuss pool type
+	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>(); //TODO discuss pool type
 	
 	public static UUID getUUID(){
 		UUID uuid = UUID.randomUUID();

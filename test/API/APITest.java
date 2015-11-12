@@ -14,11 +14,10 @@ import junit.framework.TestCase;
 public class APITest extends TestCase {
 	
 	@Test
-	public void test() {
+	public void testCreate() {
 		Manager manager = Manager.getInstance();
 		
 		SimpleDateFormat time = new SimpleDateFormat("hh:mm:ss");
-//		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 
 		String timeInString1 = "10:00:00";
 		Date start = null;
@@ -173,6 +172,11 @@ public class APITest extends TestCase {
 		Event correctSceEventNewFile2 = GeneratorAPI.createEvent(new Date(), new Date(), "event", EventType.SCHEDULED, startOverlapped2, len, 1, 2, len, "newFile", SchedulerInfoType.CCMS, new Date(), "zone", "channel");
 		System.out.println("created first event" + correctSceEventNewFile2.getID() + "!!!");
 		assertNotNull(correctSceEventNewFile2);
+	}
+	
+	@Test
+	public void testDelte() {
+		
 	}
 
 }

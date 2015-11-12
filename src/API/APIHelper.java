@@ -27,7 +27,7 @@ public class APIHelper {
 	static Logger logger = Log.getInstance();
 
 	static boolean isOverlapping(Date start1, Date start2, Date end1, Date end2) {
-		return start1.before(end2) || start2.before(end1);
+		return start1.before(end2) && start2.before(end1);
 	}
 
 	static boolean validateParams(Date eventTime, EventType eventType, Date windowLength, Date windowDuration, int windowBrk, Date windowStart, int windowPos, Map<String, SchedulerInfo> filesList,  String schInfoName, SchedulerInfoType schedulerInfoType, Date schedulerInfoDate, String schedulerInfoZone, String schedulerInfoChannel) {
@@ -58,19 +58,21 @@ public class APIHelper {
 			}
 		}
 
-		if (eventType == EventType.SCHEDULED) {
-			// need to check if the event not overlapped.
-			for (Event oldEvent : filesList.get(schInfoName).getEventMap().values()) {
-				if (isOverlapping(windowStart, oldEvent.getWindow().getStart(), sumDates(windowStart, windowDuration, 1), sumDates(oldEvent.getWindow().getStart(), oldEvent.getWindow().getDuration(), 1))) {
-					logger.error("This event overlaped another event");
-					return false;
-				}
-			}
+		if (eventType == EventType.SCHEDULED) { // avail is relevant only for sceduled.
 
 			// handle avail
 			Avail avail = filesList.get(schInfoName).getAvailMap().get(windowStart.toString() + windowDuration.toString());
 
 			if (avail == null ) { // There is no existing avail - need to create a new one!
+				
+				// check if this avail do not overlaped another avail.
+				for (Avail oldAvail : filesList.get(schInfoName).getAvailMap().values()) {
+					if (isOverlapping(windowStart, oldAvail.getStartTime(), sumDates(windowStart, windowDuration, 1), oldAvail.getEndTime())) {
+						logger.error("This avail overlaped another avail");
+						return false;
+					}
+				}
+
 				avail = new Avail(windowStart, sumDates(windowStart, windowDuration, 1), windowDuration);
 				filesList.get(schInfoName).getAvailMap().put(windowStart.toString() + windowDuration.toString(), avail);
 			} else { // exist avail
@@ -105,7 +107,6 @@ public class APIHelper {
 
 		return cal.getTime();
 	}
-
 
 }
 
