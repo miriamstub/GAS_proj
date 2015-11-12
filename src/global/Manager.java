@@ -1,5 +1,6 @@
 package global;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,8 +50,9 @@ public class Manager {
 		filesList.remove(schInfo);
 	}
 	
-	public Map<UUID, Event> getAllEvents(String schInfoName) {
-		return filesList.get(schInfoName).getEventMap();
+	public ArrayList<Event> getAllEvents(String schInfoName) {
+		
+		return new ArrayList<Event>(filesList.get(schInfoName).getEventMap().values());
 	}
 	
 	

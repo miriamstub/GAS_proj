@@ -3,6 +3,7 @@ package sandbox;
 import org.apache.log4j.Logger;
 
 import Deserializer.CCMSDeserializer;
+import Serializer.CCMSSerializer;
 import log.Log;
 
 public class Main {
@@ -18,6 +19,7 @@ public class Main {
 		//int a = 3;
 		//System.out.print(Integer.toString(a));
 		CCMSDeserializer.getInstance().run();
+		CCMSSerializer.getInstance().run(true, null);
 		
 	
 	}

@@ -13,7 +13,7 @@ import Model.EventType;
 import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
 import Model.Window;
-import Serializer.Serializer;
+import Serializer.CCMSSerializer;
 import global.Manager;
 import log.Log;
 
@@ -140,7 +140,7 @@ public class GeneratorAPI {
 	 * Serialize the files.
 	 */
 	public static void serializer() {
-		Serializer.run();
+		CCMSSerializer.getInstance().run(true, null);
 	}
 	
 	/**
