@@ -52,7 +52,7 @@ public class Manager {
 	
 	public ArrayList<Event> getAllEvents(String schInfoName) {
 		
-		return new ArrayList<Event>(filesList.get(schInfoName).getEventMap().values());
+		return new ArrayList<Event>(filesList.get(schInfoName +".txt").getEventMap().values());
 	}
 	
 	

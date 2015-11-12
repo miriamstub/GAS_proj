@@ -44,7 +44,7 @@ public class CCMSSerializer {
             	}*/
         	}
         	
-            FileWriter writer = new FileWriter("C:\\CCMSSE\\" + fileName);
+            FileWriter writer = new FileWriter("C:\\CCMSSE\\" + fileName + ".txt");
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
             bufferedWriter.write("REM Scheduled   ---------Window--------- ----actual-----");
             bufferedWriter.newLine();
