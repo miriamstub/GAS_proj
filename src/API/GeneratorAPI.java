@@ -140,7 +140,7 @@ public class GeneratorAPI {
 	 * Serialize the files.
 	 */
 	public static void serializer() {
-		CCMSSerializer.getInstance().run(true, null);
+		CCMSSerializer.getInstance().run();
 	}
 	
 	/**
