@@ -51,4 +51,6 @@ public interface IProperties {
 	
 	boolean assertEventTypeDigitsLength(String value);
 	
+	boolean assertSchedulerName(String schName);
+	
 }
