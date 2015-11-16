@@ -1,5 +1,7 @@
 package global;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +22,18 @@ public class Manager {
 	static Manager instance = null;
 
 	private Map<String, SchedulerInfo> filesList = new HashMap<>();
+	private boolean[] overlappedMins = new boolean[24 * 60];
 	
 	private Manager() {
+		Arrays.fill(overlappedMins, false);
+	}
+
+	public boolean[] getOverlappedMins() {
+		return overlappedMins;
+	}
+
+	public void setOverlappedMins(boolean[] overlappedMins) {
+		this.overlappedMins = overlappedMins;
 	}
 
 	public Map<String, SchedulerInfo> getFilesList() {
@@ -49,12 +61,13 @@ public class Manager {
 		filesList.remove(schInfo);
 	}
 	
-	public Map<UUID, Event> getAllEvents(String schInfoName) {
-		return filesList.get(schInfoName).getEventMap();
+	public ArrayList<Event> getAllEvents(String schInfoName) {
+		
+		return new ArrayList<Event>(filesList.get(schInfoName).getEventMap().values());
 	}
 	
 	
-	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>();//TODO discuss pool type
+	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>(); //TODO discuss pool type
 	
 	public static UUID getUUID(){
 		UUID uuid = UUID.randomUUID();

@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,13 +22,12 @@ public abstract class SchedulerInfo {
 	 * @param eventMap
 	 * @param availMap
 	 */
-	public SchedulerInfo(String schInfoName, SchedulerInfoType schInfoType,
-			Map<UUID, Event> eventMap, Map<String, Avail> availMap) {
+	public SchedulerInfo(String schInfoName, SchedulerInfoType schInfoType) {
 		super();
 		this.schInfoName = schInfoName;
 		this.schInfoType = schInfoType;
-		this.eventMap = eventMap;
-		this.availMap = availMap;
+		this.eventMap = new HashMap<UUID, Event>();
+		this.availMap = new HashMap<String, Avail>();
 	}
 
 	public String getSchInfoName() {

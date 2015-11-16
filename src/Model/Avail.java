@@ -11,10 +11,10 @@ public class Avail {
 	
 	private Date startTime;
 	private Date endTime;
-	private Long leftDuration;
+	private Date leftDuration;
 	
 	
-	public Avail(Date startTime, Date endTime, Long leftDuration) {
+	public Avail(Date startTime, Date endTime, Date leftDuration) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -37,11 +37,11 @@ public class Avail {
 		this.endTime = endTime;
 	}
 	
-	public Long getLeftDuration() {
+	public Date getLeftDuration() {
 		return leftDuration;
 	}
 	
-	public void setLeftDuration(Long leftDuration) {
+	public void setLeftDuration(Date leftDuration) {
 		this.leftDuration = leftDuration;
 	}
 	

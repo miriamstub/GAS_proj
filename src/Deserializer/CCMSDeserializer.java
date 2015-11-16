@@ -9,21 +9,17 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
 import log.Log;
 import API.GeneratorAPI;
-import Model.Avail;
 import Model.DateFormats;
 import Model.Event;
 import Model.EventType;
 import Model.SchedulerInfoType;
 import Model.SchDay;
 import Model.ValidateUtils;
-import Model.Window;
 
 public class CCMSDeserializer implements IDeserializer{
 
@@ -114,7 +110,7 @@ public class CCMSDeserializer implements IDeserializer{
 			for (File fileEntry : folder.listFiles()) {					
 				String schName = fileEntry.getName().substring(0, fileEntry.getName().lastIndexOf("."));
 				if(ValidateUtils.isValidSchedulerName(schName)){
-					SchDay mySchDay = new SchDay(schName, SchedulerInfoType.CCMS, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), schName.substring(0, 3), schName.substring(3, 5),schName.substring(5, 8));
+					SchDay mySchDay = new SchDay(schName, SchedulerInfoType.CCMS, schName.substring(0, 3), schName.substring(3, 5),schName.substring(5, 8));
 					try {
 						//check the file name
 						date = new SimpleDateFormat(DateFormats.MMdd.toString()).parse(Integer.parseInt(fileEntry.getName().substring(0, 1), 16) + fileEntry.getName().substring(1, 3));
