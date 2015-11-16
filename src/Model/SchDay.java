@@ -1,5 +1,4 @@
 package Model;
-import java.util.*;
 
 /**
  * @author bfeldman 
@@ -13,9 +12,8 @@ public class SchDay extends SchedulerInfo{
 	
 	
 	public SchDay(String schInfoName, SchedulerInfoType schInfoType,
-			Map<UUID, Event> eventMap, Map<String, Avail> availMap,
 			String date, String zone, String channel) {
-		super(schInfoName, schInfoType, eventMap, availMap);
+		super(schInfoName, schInfoType);
 		this.date = date;
 		this.zone = zone;
 		this.channel = channel;
