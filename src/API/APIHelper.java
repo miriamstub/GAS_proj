@@ -38,7 +38,7 @@ public class APIHelper {
 		SchedulerInfo schInfo = filesList.get(schInfoName);
 		if (schInfo == null) { // create a new file
 			if(schedulerInfoType == SchedulerInfoType.CCMS || schedulerInfoType == SchedulerInfoType.SCTE118) {
-				schInfo = new SchDay(schInfoName, schedulerInfoType, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), schedulerInfoDate, schedulerInfoZone, schedulerInfoChannel);
+				schInfo = new SchDay(schInfoName, schedulerInfoType, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), schedulerInfoDate.toString(), schedulerInfoZone, schedulerInfoChannel);
 			}
 			filesList.put(schInfoName, schInfo);
 		}
