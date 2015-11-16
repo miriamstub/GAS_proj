@@ -1,6 +1,7 @@
 package sandbox;
 
 import Deserializer.CCMSDeserializer;
+import Serializer.CCMSSerializer;
 
 public class Main {
 	
@@ -15,6 +16,7 @@ public class Main {
 		//int a = 3;
 		//System.out.print(Integer.toString(a));
 		CCMSDeserializer.getInstance().run();
+		CCMSSerializer.getInstance().run();
 		
 	
 	}
