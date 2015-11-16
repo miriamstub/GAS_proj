@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import log.Log;
 import API.GeneratorAPI;
 import Model.Avail;
@@ -21,91 +23,127 @@ import Model.EventType;
 import Model.SchedulerInfoType;
 import Model.SchDay;
 import Model.ValidateUtils;
+import Model.Window;
 
-public class CCMSDeserializer {
-	
+public class CCMSDeserializer implements IDeserializer{
 
 	private static CCMSDeserializer instance = new CCMSDeserializer();
 
-	
 	private CCMSDeserializer(){}
-	
-	public static CCMSDeserializer getInstance()
-	{
+
+	public static CCMSDeserializer getInstance(){
+
 		return instance;	
 	}
-	
+
 	Date date, time, start, dur, length;
 	int brk, pos;
 	String adName;
 	EventType eventType;
+	Logger log = Log.getInstance();
 
-	public boolean validAndConvertRowParams(String[] rowObjs){	
+	public boolean validAndConvertEventDataParams(String[] rowObjs){	
 
-		if(rowObjs.length < 13)
+		if(rowObjs.length < DeserializerConfiguration.CCMS_MIN_PARAMETERS)
 			return false;
-		
+
 		ValidateUtils.setIProperties(SchedulerInfoType.CCMS);
-       	
-        	date = ValidateUtils.getDate(rowObjs[1]);
-    		time = ValidateUtils.getTime(rowObjs[2]);
-    		start = ValidateUtils.getStart(rowObjs[3]);
-    		dur = ValidateUtils.getDuration(rowObjs[4]);
-    		brk = ValidateUtils.getBrk(rowObjs[5]);
-    		pos = ValidateUtils.getPos(rowObjs[6]);
-    		length = ValidateUtils.getLength(rowObjs[7]);
-    		adName = ValidateUtils.getAdName(rowObjs[11]);
-    		
-    		if(rowObjs.length < 22){
-    			eventType = EventType.SCHEDULED;
-    		}
-    		else{
-    			eventType = ValidateUtils.getEventType(rowObjs[21]);
-    		}
-		
-		return
-		ValidateUtils.isValidActualTime(rowObjs[8]) &&  ValidateUtils.isValidActualLength(rowObjs[9]) && ValidateUtils.isValidActualPos(rowObjs[10]) && ValidateUtils.isValidStatusCode(rowObjs[12])
-		&& ValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType);
+
+		date = ValidateUtils.getDate(rowObjs[DeserializerConfiguration.CCMS_DATE_LOCATION]);
+		time = ValidateUtils.getTime(rowObjs[DeserializerConfiguration.CCMS_TIME_LOCATION]);
+		start = ValidateUtils.getStart(rowObjs[DeserializerConfiguration.CCMS_START_LOCATION]);
+		dur = ValidateUtils.getDuration(rowObjs[DeserializerConfiguration.CCMS_DURATION_LOCATION]);
+		brk = ValidateUtils.getBrk(rowObjs[DeserializerConfiguration.CCMS_BRK_LOCATION]);
+		pos = ValidateUtils.getPos(rowObjs[DeserializerConfiguration.CCMS_POS_LOCATION]);
+		length = ValidateUtils.getLength(rowObjs[DeserializerConfiguration.CCMS_LENGTH_LOCATION]);
+		adName = ValidateUtils.getAdName(rowObjs[DeserializerConfiguration.CCMS_ADNAME_LOCATION]);
+
+		if(rowObjs.length < DeserializerConfiguration.CCMS_MAX_PARAMETERS){
+			eventType = EventType.SCHEDULED;
+		}
+		else{
+			eventType = ValidateUtils.getEventType(rowObjs[DeserializerConfiguration.CCMS_MAX_PARAMETERS -1]);
+		}
+
+		return validateData(rowObjs);
 
 	}
-	
+
+	public boolean validateData(String[] rowObjs) {
+
+		boolean fReturn = true;
+
+		if (!ValidateUtils.isValidActualTime(rowObjs[8])){
+			fReturn = false;
+			log.error("ActualTime invalid digits");
+		}
+		else if(!ValidateUtils.isValidActualLength(rowObjs[9])){
+			fReturn = false;
+			log.error("ActualLength invalid digits");
+		}
+
+		else if(!ValidateUtils.isValidActualPos(rowObjs[10])){
+			fReturn = false;
+			log.error("ActualPos invalid digits");
+		}
+
+		else if(!ValidateUtils.isValidStatusCode(rowObjs[12])){
+			fReturn = false;
+			log.error("StatusCode invalid digits");
+		}
+
+		else if(!ValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType)){
+			fReturn = false;
+			log.error("Invalid event data");
+		}
+
+		return fReturn;
+	}
 
 	public void run(){
 
 		BufferedReader br = null;
+		ValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 
 		try {
 
 			String sCurrentLine;
-			File folder = new File("C:\\CCMSDE");
+			File folder = new File(DeserializerConfiguration.FOLDER_DESERIALIZER_PATH);
 			Date date = null;
-			for (File fileEntry : folder.listFiles()) {				
 
-				try {
-                    //check the file name
-					date = new SimpleDateFormat(DateFormats.MMdd.toString()).parse(Integer.parseInt(fileEntry.getName().substring(0, 1), 16) + fileEntry.getName().substring(1, 3));
+			for (File fileEntry : folder.listFiles()) {					
+				String schName = fileEntry.getName().substring(0, fileEntry.getName().lastIndexOf("."));
+				if(ValidateUtils.isValidSchedulerName(schName)){
+					SchDay mySchDay = new SchDay(schName, SchedulerInfoType.CCMS, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), schName.substring(0, 3), schName.substring(3, 5),schName.substring(5, 8));
+					try {
+						//check the file name
+						date = new SimpleDateFormat(DateFormats.MMdd.toString()).parse(Integer.parseInt(fileEntry.getName().substring(0, 1), 16) + fileEntry.getName().substring(1, 3));
 
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 
-				//create the file
-				SchDay mySchDay = new SchDay(fileEntry.getName(), SchedulerInfoType.CCMS, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), date, (fileEntry.getName().substring(3, 5)),fileEntry.getName().substring(5, 8));
-				Manager.getInstance().addSchedulerInfo(mySchDay);
-				
-				Log.getInstance().info("New CCMS Scheduled Info " + mySchDay.getSchInfoName() + " created successfully");
-				
-				br = new BufferedReader(new FileReader(fileEntry.getPath()));
-				while ((sCurrentLine = br.readLine()) != null) {
-					
-					String[] rowObjs = sCurrentLine.split("\\s+");
+					//create the file
+					Manager.getInstance().addSchedulerInfo(mySchDay);
 
-					if(!rowObjs[0].equals("REM")){
-						if(validAndConvertRowParams(rowObjs)){
-							GeneratorAPI.createEvent(date,time,adName,eventType,start,dur,brk,pos,length, fileEntry.getName());
-						}	
+					log.info("New CCMS Scheduled Info " + mySchDay.getSchInfoName() + " created successfully");
+
+					br = new BufferedReader(new FileReader(fileEntry.getPath()));
+					while ((sCurrentLine = br.readLine()) != null) {
+
+						String[] rowObjs = sCurrentLine.split("\\s+");
+
+						if(!rowObjs[0].equals("REM")){
+							if(validAndConvertEventDataParams(rowObjs)){
+								Event event = new Event(date, time, start, dur, brk, pos, date, sCurrentLine, eventType); 
+								GeneratorAPI.createEvent(event, mySchDay);
+							}	
+
+						}
 					}
 				}
+				else
+					Log.getInstance().error("Can not create CCMS Scheduled Info " + fileEntry.getName() + ". SchedulerInfo name is invalid");
 			}
 
 		} catch (IOException e) {
