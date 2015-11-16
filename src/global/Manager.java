@@ -1,6 +1,5 @@
 package global;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,13 +49,12 @@ public class Manager {
 		filesList.remove(schInfo);
 	}
 	
-	public ArrayList<Event> getAllEvents(String schInfoName) {
-		
-		return new ArrayList<Event>(filesList.get(schInfoName).getEventMap().values());
+	public Map<UUID, Event> getAllEvents(String schInfoName) {
+		return filesList.get(schInfoName).getEventMap();
 	}
 	
 	
-	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>(); //TODO discuss pool type
+	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>();//TODO discuss pool type
 	
 	public static UUID getUUID(){
 		UUID uuid = UUID.randomUUID();

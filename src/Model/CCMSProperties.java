@@ -1,11 +1,16 @@
 package Model;
 
+import java.util.Date;
+
 /**
  * @author bfeldman 
  * Nov 10, 2015
  */
 public class CCMSProperties implements IProperties {
 
+	public final int brkDigits = 3;
+	public final int posDigits = 3;
+	
 	@Override
 	public DateFormats getDateFormat() {
 		return DateFormats.MMdd;
@@ -57,12 +62,12 @@ public class CCMSProperties implements IProperties {
 
 	@Override
 	public boolean assertBrkDigitsLength(String value) {
-		return value.length() == 3;
+		return value.length() == brkDigits;
 	}
 
 	@Override
 	public boolean assertPosDigitsLength(String value) {
-		return value.length() == 3;
+		return value.length() == posDigits;
 	}
 
 	@Override
@@ -109,5 +114,18 @@ public class CCMSProperties implements IProperties {
 	public boolean assertEventTypeDigitsLength(String value) {
 		return value.length() == 4;
 	}
+
+	/* (non-Javadoc)
+	 * @see Model.IProperties#assertSchedulerName(java.lang.String)
+	 */
+	@Override
+	public boolean assertSchedulerName(String schName) {
+		String schInfoNameRgx = "[1-9 A-C][0-3][0-9][0-9 A-Z]{5}";
+		String date = schName.substring(0, 3);
+		int month = Integer.parseInt(date.substring(0, 1), 16);
+		Date formattedDate = DateUtils.getFormattedDate(DateFormats.MMdd, (month<10 ? "0" : "") + month + date.substring(1, 3));		
+		return schName.matches(schInfoNameRgx) && formattedDate!=null;
+}
+
 
 }

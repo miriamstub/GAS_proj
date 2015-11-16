@@ -27,13 +27,12 @@ import Model.Window;
 
 public class CCMSDeserializer implements IDeserializer{
 
-
 	private static CCMSDeserializer instance = new CCMSDeserializer();
-
 
 	private CCMSDeserializer(){}
 
 	public static CCMSDeserializer getInstance(){
+
 		return instance;	
 	}
 
@@ -70,12 +69,11 @@ public class CCMSDeserializer implements IDeserializer{
 
 	}
 
-	private boolean validateData(String[] rowObjs) {
+	public boolean validateData(String[] rowObjs) {
 
 		boolean fReturn = true;
 
-		if (!ValidateUtils.isValidActualTime(rowObjs[8]))
-		{
+		if (!ValidateUtils.isValidActualTime(rowObjs[8])){
 			fReturn = false;
 			log.error("ActualTime invalid digits");
 		}
@@ -94,8 +92,7 @@ public class CCMSDeserializer implements IDeserializer{
 			log.error("StatusCode invalid digits");
 		}
 
-		else if(!ValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType))
-		{
+		else if(!ValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType)){
 			fReturn = false;
 			log.error("Invalid event data");
 		}
@@ -106,40 +103,47 @@ public class CCMSDeserializer implements IDeserializer{
 	public void run(){
 
 		BufferedReader br = null;
+		ValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 
 		try {
 
 			String sCurrentLine;
 			File folder = new File(DeserializerConfiguration.FOLDER_DESERIALIZER_PATH);
 			Date date = null;
-			for (File fileEntry : folder.listFiles()) {				
 
-				try {
-					//check the file name
-					date = new SimpleDateFormat(DateFormats.MMdd.toString()).parse(Integer.parseInt(fileEntry.getName().substring(0, 1), 16) + fileEntry.getName().substring(1, 3));
+			for (File fileEntry : folder.listFiles()) {					
+				String schName = fileEntry.getName().substring(0, fileEntry.getName().lastIndexOf("."));
+				if(ValidateUtils.isValidSchedulerName(schName)){
+					SchDay mySchDay = new SchDay(schName, SchedulerInfoType.CCMS, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), schName.substring(0, 3), schName.substring(3, 5),schName.substring(5, 8));
+					try {
+						//check the file name
+						date = new SimpleDateFormat(DateFormats.MMdd.toString()).parse(Integer.parseInt(fileEntry.getName().substring(0, 1), 16) + fileEntry.getName().substring(1, 3));
 
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 
-				//create the file
-				SchDay mySchDay = new SchDay(fileEntry.getName(), SchedulerInfoType.CCMS, new HashMap<UUID, Event>(), new HashMap<String, Avail>(), date, (fileEntry.getName().substring(3, 5)),fileEntry.getName().substring(5, 8));
-				Manager.getInstance().addSchedulerInfo(mySchDay);
+					//create the file
+					Manager.getInstance().addSchedulerInfo(mySchDay);
 
-				log.info("New CCMS Scheduled Info " + mySchDay.getSchInfoName() + " created successfully");
+					log.info("New CCMS Scheduled Info " + mySchDay.getSchInfoName() + " created successfully");
 
-				br = new BufferedReader(new FileReader(fileEntry.getPath()));
-				while ((sCurrentLine = br.readLine()) != null) {
+					br = new BufferedReader(new FileReader(fileEntry.getPath()));
+					while ((sCurrentLine = br.readLine()) != null) {
 
-					String[] rowObjs = sCurrentLine.split("\\s+");
+						String[] rowObjs = sCurrentLine.split("\\s+");
 
-					if(!rowObjs[0].equals("REM")){
-						if(validAndConvertEventDataParams(rowObjs)){
-							Event event = new Event(date, time, start, dur, brk, pos, date, sCurrentLine, eventType); 
-							GeneratorAPI.createEvent(event, mySchDay);
-						}	
+						if(!rowObjs[0].equals("REM")){
+							if(validAndConvertEventDataParams(rowObjs)){
+								Event event = new Event(date, time, start, dur, brk, pos, date, sCurrentLine, eventType); 
+								GeneratorAPI.createEvent(event, mySchDay);
+							}	
+
+						}
 					}
 				}
+				else
+					Log.getInstance().error("Can not create CCMS Scheduled Info " + fileEntry.getName() + ". SchedulerInfo name is invalid");
 			}
 
 		} catch (IOException e) {

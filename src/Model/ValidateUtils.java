@@ -3,6 +3,8 @@ package Model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * @author bfeldman 
@@ -11,14 +13,14 @@ import java.util.Date;
 public final class ValidateUtils {
 
 
-	private static IProperties iproperties;
+	private static IProperties iproperties;//maybe static problem to check
 
 	public static void setIProperties(SchedulerInfoType schInfoType){
 		iproperties = getPropertiesClass(schInfoType);
 	}
 
 	public static Date getDate(String date) {
-		Date d = getFormattedDate(iproperties.getDateFormat(),date);
+		Date d = DateUtils.getFormattedDate(iproperties.getDateFormat(),date);
 		if(iproperties.assertDateDigitsLength(date) &&  d!=null)
 			return d;
 		else
@@ -26,7 +28,7 @@ public final class ValidateUtils {
 	}
 
 	public static Date getTime(String time) {
-		Date d = getFormattedDate(iproperties.getTimeFormat(),time);
+		Date d = DateUtils.getFormattedDate(iproperties.getTimeFormat(),time);
 		if(iproperties.assertTimeDigitsLength(time) &&  d!=null)
 			return d;
 		else
@@ -35,7 +37,7 @@ public final class ValidateUtils {
 
 
 	public static Date getStart(String start) {
-		Date d = getFormattedDate(iproperties.getStartFormat(),start);
+		Date d = DateUtils.getFormattedDate(iproperties.getStartFormat(),start);
 		if(iproperties.assertStartDigitsLength(start) &&  d!=null)
 			return d;
 		else
@@ -43,7 +45,7 @@ public final class ValidateUtils {
 	}
 
 	public static Date getDuration(String duration) {
-		Date d = getFormattedDate(iproperties.getDurationFormat(),duration);
+		Date d = DateUtils.getFormattedDate(iproperties.getDurationFormat(),duration);
 		if(iproperties.assertDurationDigitsLength(duration) &&  d!=null)
 			return d;
 		else
@@ -65,7 +67,7 @@ public final class ValidateUtils {
 	}
 
 	public static Date getLength(String length) {
-		Date d = getFormattedDate(iproperties.getLengthFormat(),length);
+		Date d = DateUtils.getFormattedDate(iproperties.getLengthFormat(),length);
 		if(iproperties.assertLengthDigitsLength(length) &&  d!=null)
 			return d;
 		else
@@ -85,7 +87,7 @@ public final class ValidateUtils {
 		else
 			return null;
 	}
-	
+
 	public static boolean isValidStatusCode(String statusCode) {
 		return iproperties.assertStatusCodeDigitsLength(statusCode);
 	}
@@ -102,12 +104,9 @@ public final class ValidateUtils {
 		return iproperties.assertActualPosDigitsLength(actualPos);
 	}
 
-
-	//TODO schDay date
-	//	public static boolean isValidFileDate(String date) {
-	//			return /*ModelUtils.*/isValidFormat(DateFormats.Mdd,date);//the month in letter!!!!!!!!!!SOS
-	//	}
-
+	public static boolean isValidSchedulerName(String schName){
+		return iproperties.assertSchedulerName(schName);
+	}
 
 	public static boolean notNull(Object... args) {
 		for (Object arg : args) {
@@ -116,21 +115,64 @@ public final class ValidateUtils {
 		return true;
 	}
 
-
-	public static Date getFormattedDate(DateFormats format, String value) {
-		Date date = null;
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(format.toString());//specific format
-			date = sdf.parse(value);//convert string to date in the ditto format
-			if (!value.equals(sdf.format(date))) {//convert date to string in the ditto format and compare if we got the same string as we got as parameter.
-				date = null;
-			}
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		}
-		return date;
+	public static String getStringDate(Date date){
+		return DateUtils.convertDateToString(iproperties.getDateFormat(), date);
 	}
 
+	public static String getStringTime(Date date){
+		return DateUtils.convertDateToString(iproperties.getTimeFormat(), date);
+	}
+
+	public static String getStringStart(Date date){
+		return DateUtils.convertDateToString(iproperties.getStartFormat(), date);
+	}
+
+	public static String getStringDuration(Date date){
+		return DateUtils.convertDateToString(iproperties.getDurationFormat(), date);
+	}
+
+	public static String getStringLength(Date date){
+		return DateUtils.convertDateToString(iproperties.getLengthFormat(), date);
+	}
+
+	public static String completeIntToString(int num,int expectedDigits){
+		String sNum = Integer.toString(num);
+		if (sNum.length()< expectedDigits)
+			sNum  = completeDigits(expectedDigits - sNum.length()) + sNum;
+		return sNum;
+	}
+	
+//	public static String getStringPos(int i){
+//		String a = Integer.toString(i);
+//		if (a.length()< IProperties.posDigits)
+//			a  = completeDigits(IProperties.posDigits-a.length()) + a;
+//		return a;
+//	}
+
+	public static String completeDigits(int missDigits){
+		String[] array0 = {"","0","00","000","0000","00000","000000","0000000","00000000"};
+		return array0[missDigits];
+		//   while(myNumber>0){
+		//		    System.out.print("0");
+		//		    myNumber--;
+		//   }
+
+	}
+
+	//	public static String getConvertString(String value, Date date){
+	//		DateFormats df;
+	//		switch (value) {
+	//		case "date":
+	//			df = iproperties.getDateFormat();
+	//			break;
+	//
+	//		default:
+	//			df = iproperties.getDurationFormat();
+	//			break;
+	//		}
+	//		return DateUtils.convertDateToString(df, date);
+	//	}
+	//	
 
 	public static IProperties getPropertiesClass(SchedulerInfoType schInfoType){
 		IProperties propertiesClass = null;
@@ -149,31 +191,5 @@ public final class ValidateUtils {
 		return propertiesClass;
 	}
 
-
-	//	public static Date getFormattedDate(DateFormats format, String value) {
-	//		Date date = null;
-	//		try {
-	//			date = new SimpleDateFormat(format.toString()).parse(value);
-	//		} catch (ParseException ex) {
-	//			ex.printStackTrace();
-	//		}
-	//		return date;
-	//	}
-
-
-	//	public static boolean isValidFormat(DateFormats format, String value) {
-	//		Date date = null;
-	//		try {
-	//			SimpleDateFormat sdf = new SimpleDateFormat(format.toString());//specific format
-	//			date = sdf.parse(value);//convert string to date in the ditto format
-	//			if (!value.equals(sdf.format(date))) {//convert date to string in the ditto format and compare if we got the same string as we got as parameter.
-	//				date = null;
-	//			}
-	//		} catch (ParseException ex) {
-	//			ex.printStackTrace();
-	//		}
-	//		System.out.println(date != null?"VV":"XX");
-	//		return date != null;
-	//	}
 
 }
