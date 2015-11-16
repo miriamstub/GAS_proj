@@ -1,7 +1,9 @@
 package global;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import Model.SchedulerInfo;
 
@@ -53,16 +55,13 @@ public class Manager {
 		return filesList.get(schInfoName).getEventMap();
 	}
 	
-	
-	public static HashMap<UUID,String> UUIDPool = new HashMap<UUID,String>();//TODO discuss pool type
-	
+	private static Set<UUID> UUIDPool = new HashSet<UUID>();
 	public static UUID getUUID(){
 		UUID uuid = UUID.randomUUID();
-		while(UUIDPool.containsKey(uuid)){
+		while(!UUIDPool.add(uuid)){
 			uuid = UUID.randomUUID();
 			System.out.println("Duplicate UUID!!!");
 		}
-		UUIDPool.put(uuid, "");
 		return uuid;
 	}
 
