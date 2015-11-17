@@ -1,7 +1,6 @@
 package global;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,18 +23,8 @@ public class Manager {
 	static Manager instance = null;
 
 	private Map<String, SchedulerInfo> filesList = new HashMap<>();
-	private boolean[] overlappedMins = new boolean[24 * 60];
 	
 	private Manager() {
-		Arrays.fill(overlappedMins, false);
-	}
-
-	public boolean[] getOverlappedMins() {
-		return overlappedMins;
-	}
-
-	public void setOverlappedMins(boolean[] overlappedMins) {
-		this.overlappedMins = overlappedMins;
 	}
 
 	public Map<String, SchedulerInfo> getFilesList() {

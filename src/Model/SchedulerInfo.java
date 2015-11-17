@@ -1,7 +1,10 @@
 package Model;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -13,8 +16,9 @@ public abstract class SchedulerInfo {
 	private String schInfoName;
 	private SchedulerInfoType schInfoType;
 	private Map<UUID, Event> eventMap;
+	private Set<String> eventKeys;
 	private Map<String, ProgramAvail> availMap;
-	
+	private boolean[] overlappedMins = new boolean[24 * 60];
 	
 	/**
 	 * @param schInfoName
@@ -27,7 +31,9 @@ public abstract class SchedulerInfo {
 		this.schInfoName = schInfoName;
 		this.schInfoType = schInfoType;
 		this.eventMap = new HashMap<UUID, Event>();
+		this.eventKeys = new HashSet<String>();
 		this.availMap = new HashMap<String, ProgramAvail>();
+		Arrays.fill(this.overlappedMins, false);
 	}
 
 	public String getSchInfoName() {
@@ -43,6 +49,15 @@ public abstract class SchedulerInfo {
 	public void setEventMap(Map<UUID, Event> eventMap) {
 		this.eventMap = eventMap;
 	}
+	
+	public Set<String> getEventKeys() {
+		return eventKeys;
+	}
+
+	public void setEventKeys(Set<String> eventKeys) {
+		this.eventKeys = eventKeys;
+	}
+	
 	public Map<String, ProgramAvail> getAvailMap() {
 		return availMap;
 	}
@@ -58,5 +73,11 @@ public abstract class SchedulerInfo {
 		this.schInfoType = schInfoType;
 	}
 
-	
+	public boolean[] getOverlappedMins() {
+		return overlappedMins;
+	}
+
+	public void setOverlappedMins(boolean[] overlappedMins) {
+		this.overlappedMins = overlappedMins;
+	}
 }

@@ -86,9 +86,9 @@ public class APIHelper {
 		return true;
 	}*/
 
-	static boolean isOverlapping(Date start1, Date start2, Date end1, Date end2) {
+	/*static boolean isOverlapping(Date start1, Date start2, Date end1, Date end2) {
 		return start1.before(end2) && start2.before(end1);
-	}
+	}*/
 
 	public static Date sumDates(Date date1, Date date2, int type) {
 		Calendar dur = Calendar.getInstance();
@@ -127,15 +127,17 @@ public class APIHelper {
 
 		// TODO modify file!!
 
-	/* change to keys
-	 * 	for (Event event : schInfo.getEventMap().values()) {
-			Window window = event.getWindow();
-			if (eventType == EventType.SCHEDULED && window.getBrk() == windowBrk && window.getDuration() == windowDuration && window.getPos() == windowPos && window.getStart() == windowStart 
-					|| eventType == EventType.FILL && event.getTime() == eventTime) { // duplicate, reject
-				logger.error("duplicate event");
-				return false;
-			}
-		}*/
+		String key = event.getEventType() == EventType.SCHEDULED ?
+				"sce" + event.getWindow().getBrk() + event.getWindow().getPos() + event.getWindow().getDuration() + event.getWindow().getStart() : 
+				"fill" + event.getTime();
+		
+		if (schInfo.getEventKeys().contains(key)) {
+			logger.error("duplicate event");
+			return false;
+		} else {
+			// add new key to set
+			schInfo.getEventKeys().add(key);
+		}
 
 		if (event.getEventType() == EventType.SCHEDULED) { // avail is relevant only for sceduled.
 
@@ -154,17 +156,19 @@ public class APIHelper {
 				int minutes = calendarStart.get(Calendar.MINUTE);
 				
 				Calendar calendarEnd = Calendar.getInstance();
-				calendarEnd.setTime(window.getStart());
+				calendarEnd.setTime(windowEndDate);
 				int hours1 = calendarEnd.get(Calendar.HOUR_OF_DAY);
 				int minutes1 = calendarEnd.get(Calendar.MINUTE);
 				
-				if(!Manager.getInstance().getOverlappedMins()[hours * 60 + minutes] || !Manager.getInstance().getOverlappedMins()[hours1 * 60 + minutes1]) {
+//				boolean[] aaa = Arrays.copyOfRange(schInfo.getOverlappedMins(), hours * 60 + minutes, hours1 * 60 + minutes1);
+//				if (Arrays.asList(aaa).contains(true)) {
+				if(schInfo.getOverlappedMins()[hours * 60 + minutes] || schInfo.getOverlappedMins()[hours1 * 60 + minutes1]) {
 					logger.error("This avail overlaped another avail");
 					return false;
-				}
-
+				} else {
 				// fill the array
-				Arrays.fill(Manager.getInstance().getOverlappedMins(),(int) window.getStart().getTime() / 6000, (int) windowEndDate.getTime() / 6000, true);
+					Arrays.fill(schInfo.getOverlappedMins(), hours * 60 + minutes, hours1 * 60 + minutes1, true);
+				}
 				
 				avail = new ProgramAvail(window.getStart(), windowEndDate, window.getDuration());
 				filesList.get(schedulerInfo.getSchInfoName()).getAvailMap().put(window.getStart().toString() + window.getDuration().toString(), avail);

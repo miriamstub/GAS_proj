@@ -21,6 +21,9 @@ import Model.SchedulerInfoType;
 import Model.SchDay;
 import Model.ConvertAndValidateUtils;
 
+/**
+ * <img src="file.png" />
+ */
 public class CCMSDeserializer implements IDeserializer{
 
        private static CCMSDeserializer instance = new CCMSDeserializer();
