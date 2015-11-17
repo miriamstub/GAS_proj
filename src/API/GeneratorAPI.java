@@ -25,31 +25,6 @@ public class GeneratorAPI {
 	static Logger logger = Log.getInstance();
 	static Map<String, SchedulerInfo> filesList = Manager.getInstance().getFilesList();
 	
-	/*// TODO change to ... (create + modify)
-	
-	// called from de...
-	// I have the file object, not need the all params...
-	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName) {
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, null, null, null, null)) {
-			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
-			filesList.get(schInfoName).getEventMap().put(newEvent.getID(), newEvent);
-			return newEvent;
-		}
-		return null;
-	}
-	
-	// called from API
-	// do not know if there is a new file or older - get ID and all params
-	public static Event createEvent(Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
-			Event newEvent =  new Event(eventDate, eventTime, windowStart, windowDuration, windowBrk, windowPos, windowLength, adName, eventType);
-			filesList.get(schInfoName).getEventMap().put(newEvent.getID(), newEvent);
-			return newEvent;
-		}
-		return null;
-	}*/
-	// TODO create from API!!
-	
 	/**
 	 * Create event (called from serelizer)
 	 * @param {Event} event
@@ -65,34 +40,7 @@ public class GeneratorAPI {
 		return null;
  	}
 
-	// TODO modify from API!!
-/*	public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
-		Event event = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
-		if (event == null) {
-			logger.error("The event does not exist");
-			return null;
-		}
-		// delete key
-
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
-			event.setAdName(adName);
-			event.setDate(eventDate);
-			event.setEventType(eventType);
-			event.setTime(eventTime);
-			event.getWindow().setBrk(windowBrk);
-			event.getWindow().setDuration(windowDuration);
-			event.getWindow().setLength(windowLength);
-			event.getWindow().setStart(windowStart);
-			event.getWindow().setPos(windowPos);
-			
-			// add event to the relevant file!!!!
-			// TODO if create new file to delete the event from the old file list.
-		}
-
-		return event;
-	}*/
-	
-	public static Event modifyEvent(String eventId, String schInfoName, Event event, SchedulerInfo schedulerInfo) {
+	public static Event modifyEvent(UUID eventId, String schInfoName, Event event, SchedulerInfo schedulerInfo) {
 		Event oldEvent = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
 		if (oldEvent == null) {
 			logger.error("The event does not exist");
@@ -122,19 +70,19 @@ public class GeneratorAPI {
 	/**
 	 * Delete existing event
 	 * Called from serialize / API
-	 * @param {String} fileName
+	 * @param {String} schInfoName
 	 * @param {UUID} eventId
 	 */
-	public static void deleteEvent(String schInfoName, UUID eventId) {
+	public static boolean deleteEvent(String schInfoName, UUID eventId) {
 		Event event = filesList.get(schInfoName).getEventMap().get(eventId);
 		if (event == null) {
 			logger.error("The event does not exist");
-			return;
+			return false;
 		}
 
 		// handled sum duration
 		Window window = event.getWindow();
-		ProgramAvail avail = filesList.get(schInfoName).getAvailMap().get(window.getStart().getTime() + window.getDuration().getTime());
+		ProgramAvail avail = filesList.get(schInfoName).getAvailMap().get(window.getStart().toString() + window.getDuration().toString());
 		avail.setLeftDuration(DateUtils.sumDates(avail.getLeftDuration(), window.getLength(), 1));
 		
 		// delete the avail if there is no events that use him.
@@ -142,16 +90,18 @@ public class GeneratorAPI {
 			filesList.get(schInfoName).getAvailMap().remove(window.getStart().getTime() + window.getDuration().getTime());
 		}
 		
-		// TODO remove key
-		
+		// remove key
+		String key = APIHelper.generateKey(event.getWindow(), event.getTime(), event.getEventType());
+		 filesList.get(schInfoName).getEventKeys().remove(key);
 		// remove the event
 		Manager.getInstance().deleteEvent(schInfoName,eventId);
 		
 		
 		// if the event is the last on this file - delete the file also.
-		if(filesList.get(schInfoName).getEventMap().size() == 0) {
+		if (filesList.get(schInfoName).getEventMap().size() == 0) {
 			filesList.remove(schInfoName);
 		}
+		return true;
 	}
 
 	/**
