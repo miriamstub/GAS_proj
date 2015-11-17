@@ -72,21 +72,21 @@ public class CCMSDeserializer implements IDeserializer{
 
               boolean fReturn = true;
 
-              if (!ValidateUtils.isValidActualTime(rowObjs[8])){
+              if (!ValidateUtils.isValidActualTime(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_TIME_LOCATION])){
                      fReturn = false;
                      log.error("ActualTime invalid digits");
               }
-              else if(!ValidateUtils.isValidActualLength(rowObjs[9])){
+              else if(!ValidateUtils.isValidActualLength(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_LENGTH_LOCATION])){
                      fReturn = false;
                      log.error("ActualLength invalid digits");
               }
 
-              else if(!ValidateUtils.isValidActualPos(rowObjs[10])){
+              else if(!ValidateUtils.isValidActualPos(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_POS_LOCATION])){
                      fReturn = false;
                      log.error("ActualPos invalid digits");
               }
 
-              else if(!ValidateUtils.isValidStatusCode(rowObjs[12])){
+              else if(!ValidateUtils.isValidStatusCode(rowObjs[DeserializerConfiguration.CCMS_STATUSE_CODE_LOCATION])){
                      fReturn = false;
                      log.error("StatusCode invalid digits");
               }
