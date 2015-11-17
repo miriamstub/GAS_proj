@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 
 import Deserializer.CCMSDeserializer;
-import Model.Avail;
+import Model.ProgramAvail;
 import Model.Event;
 import Model.SchedulerInfo;
 import Model.Window;
@@ -97,7 +97,7 @@ public class GeneratorAPI {
 
 		// handled sum duration
 		Window window = event.getWindow();
-		Avail avail = filesList.get(schInfoName).getAvailMap().get(window.getStart().getTime() + window.getDuration().getTime());
+		ProgramAvail avail = filesList.get(schInfoName).getAvailMap().get(window.getStart().getTime() + window.getDuration().getTime());
 		avail.setLeftDuration(APIHelper.sumDates(avail.getLeftDuration(), window.getLength(), 1));
 		
 		// delete the avail if there is no events that use him.

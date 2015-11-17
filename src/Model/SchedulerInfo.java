@@ -13,7 +13,7 @@ public abstract class SchedulerInfo {
 	private String schInfoName;
 	private SchedulerInfoType schInfoType;
 	private Map<UUID, Event> eventMap;
-	private Map<String, Avail> availMap;
+	private Map<String, ProgramAvail> availMap;
 	
 	
 	/**
@@ -27,7 +27,7 @@ public abstract class SchedulerInfo {
 		this.schInfoName = schInfoName;
 		this.schInfoType = schInfoType;
 		this.eventMap = new HashMap<UUID, Event>();
-		this.availMap = new HashMap<String, Avail>();
+		this.availMap = new HashMap<String, ProgramAvail>();
 	}
 
 	public String getSchInfoName() {
@@ -43,10 +43,10 @@ public abstract class SchedulerInfo {
 	public void setEventMap(Map<UUID, Event> eventMap) {
 		this.eventMap = eventMap;
 	}
-	public Map<String, Avail> getAvailMap() {
+	public Map<String, ProgramAvail> getAvailMap() {
 		return availMap;
 	}
-	public void setAvailMap(Map<String, Avail> availMap) {
+	public void setAvailMap(Map<String, ProgramAvail> availMap) {
 		this.availMap = availMap;
 	}
 

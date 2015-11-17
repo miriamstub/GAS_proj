@@ -14,7 +14,7 @@ import java.util.Map;
 import Model.Event;
 import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
-import Model.ValidateUtils;
+import Model.ConvertAndValidateUtils;
 
 
 public class CCMSSerializer implements ISerializer{
@@ -88,7 +88,7 @@ public class CCMSSerializer implements ISerializer{
 
 			//run on all the events 
 			for(Event myEvent : schInfoEntry.getEventMap().values()){
-				ValidateUtils.setIProperties(SchedulerInfoType.CCMS);
+				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 				/*bufferedWriter.write("LOI ");
 				bufferedWriter.write(ValidateUtils.getStringDate(myEvent.getDate()));
 				bufferedWriter.write(" " + ValidateUtils.getStringTime(myEvent.getTime()));
@@ -104,7 +104,7 @@ public class CCMSSerializer implements ISerializer{
 
 				bufferedWriter.newLine();*/
 
-				event += "LOI " + ValidateUtils.getStringDate(myEvent.getDate()) + " " + ValidateUtils.getStringTime(myEvent.getTime()) + " " + ValidateUtils.getStringStart(myEvent.getWindow().getStart()) + " " + ValidateUtils.getStringDuration(myEvent.getWindow().getDuration()) + " " + ValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3) + " " + ValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3) + " " + ValidateUtils.getStringLength(myEvent.getWindow().getLength()) + " 000000 00000000 000" + " " + myEvent.getAdName() + " 0000 AL TEST    ALU Real Channel Cu test spot" + myEvent.getWindow().getPos() + "     " + myEvent.getEventType().getValue();
+				event += "LOI " + ConvertAndValidateUtils.getStringDate(myEvent.getDate()) + " " + ConvertAndValidateUtils.getStringTime(myEvent.getTime()) + " " + ConvertAndValidateUtils.getStringStart(myEvent.getWindow().getStart()) + " " + ConvertAndValidateUtils.getStringDuration(myEvent.getWindow().getDuration()) + " " + ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3) + " " + ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3) + " " + ConvertAndValidateUtils.getStringLength(myEvent.getWindow().getLength()) + " 000000 00000000 000" + " " + myEvent.getAdName() + " 0000 AL TEST    ALU Real Channel Cu test spot" + myEvent.getWindow().getPos() + "     " + myEvent.getEventType().getValue();
 				bufferedWriter.write(event);
 			}
 
