@@ -145,7 +145,9 @@ public class GeneratorAPI {
 		// TODO remove key
 		
 		// remove the event
-		filesList.get(schInfoName).getEventMap().remove(eventId);
+		Manager.getInstance().deleteEvent(schInfoName,eventId);
+		
+		
 		// if the event is the last on this file - delete the file also.
 		if(filesList.get(schInfoName).getEventMap().size() == 0) {
 			filesList.remove(schInfoName);

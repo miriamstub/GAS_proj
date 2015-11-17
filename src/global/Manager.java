@@ -57,6 +57,10 @@ public class Manager {
 		return new ArrayList<Event>(filesList.get(schInfoName).getEventMap().values());
 	}
 	
+	public boolean deleteEvent(String schInfoName, UUID eventId ){
+		return filesList.get(schInfoName).getEventMap().remove(eventId)!=null
+		&& UUIDPool.remove(eventId);
+	}
 
 	private static Set<UUID> UUIDPool = new HashSet<UUID>();
 	public static UUID getUUID(){
