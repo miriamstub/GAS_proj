@@ -210,19 +210,11 @@ public class APITest extends TestCase {
 //		assertNotNull(correctSceEventNewFile2);
 	}
 	
-	@Ignore	
 	@Test
 	public void testDelte() {
-				
-	}
-	
-	@Test
-	public void testAll() {
-		SchedulerInfo schedulerInfo = new SchDay("file", SchedulerInfoType.CCMS, "date", "zone", "channel");
-
 		SimpleDateFormat time = new SimpleDateFormat("hh:mm:ss");
 
-		String timeInString1 = "00:00:00";
+		String timeInString1 = "10:00:00";
 		Date start = null;
 		try {
 			start = time.parse(timeInString1);
@@ -230,7 +222,7 @@ public class APITest extends TestCase {
 			e2.printStackTrace();
 		}
 		
-		String timeInString2 = "01:00:00";
+		String timeInString2 = "00:20:00";
 		Date dur = null;
 		try {
 			dur = time.parse(timeInString2);
@@ -238,7 +230,7 @@ public class APITest extends TestCase {
 			e1.printStackTrace();
 		}
 		
-		String timeInString3 = "00:01:00";
+		String timeInString3 = "00:05:00";
 		Date len = null;
 		try {
 			len = time.parse(timeInString3);
@@ -246,15 +238,86 @@ public class APITest extends TestCase {
 			e.printStackTrace();
 		}
 
-		for (int i = 0; i < 24; i++) {
-			for (int j = 0; j < 60; j++) {
-				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, j, len, "event", EventType.SCHEDULED);
-				correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
-			}
-			start = DateUtils.sumDates(start, dur, 1);
-		}
+		// create one
+		Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
+		SchedulerInfo schedulerInfo = new SchDay("file", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
+		System.out.println("created first event1 " + correctSceEvent.getID() + "!!!");
+		assertNotNull(correctSceEvent);	
 		
-		GeneratorAPI.serializer();
+		// try create duplicate
+		Event failSceEvent1 = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
+		failSceEvent1 = GeneratorAPI.createEvent(failSceEvent1, schedulerInfo);
+		System.out.println("reject!!!");
+		assertNull(failSceEvent1);
+		
+		Event correctSceEvent2 = new Event(new Date(), new Date(), start, dur, 1, 2, len, "event", EventType.SCHEDULED);
+		correctSceEvent2 = GeneratorAPI.createEvent(correctSceEvent2, schedulerInfo);
+		System.out.println("created first event2 " + correctSceEvent2.getID() + "!!!");
+		assertNotNull(correctSceEvent2);
+		
+		// try delete not exist id
+		assertFalse(GeneratorAPI.deleteEvent(schedulerInfo.getSchInfoName(), Manager.getUUID()));
+
+		// delete him
+		GeneratorAPI.deleteEvent(schedulerInfo.getSchInfoName(), correctSceEvent.getID());
+
+		// check if the id not exist
+		assertNull(Manager.getInstance().getFilesList().get(schedulerInfo.getSchInfoName()).getEventMap().get(correctSceEvent.getID()));
+		
+		// delete second
+		GeneratorAPI.deleteEvent(schedulerInfo.getSchInfoName(), correctSceEvent2.getID());
+	
+		// check if the file deleted
+		assertNull(Manager.getInstance().getFilesList().get(schedulerInfo.getSchInfoName()));
+		
+		// try to create again (if not deleted successfully - duplicate)
+		Event correctSceEvent3 = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
+		correctSceEvent3 = GeneratorAPI.createEvent(correctSceEvent3, schedulerInfo);
+		System.out.println("created first event" + correctSceEvent3.getID() + "!!!");
+		assertNotNull(correctSceEvent3);	
+		
+	}
+	
+	@Ignore
+	@Test
+	public void testAll() {
+//		SchedulerInfo schedulerInfo = new SchDay("file", SchedulerInfoType.CCMS, "date", "zone", "channel");
+//		SimpleDateFormat time = new SimpleDateFormat("hh:mm:ss");
+//
+//		String timeInString1 = "00:00:00";
+//		Date start = null;
+//		try {
+//			start = time.parse(timeInString1);
+//		} catch (ParseException e2) {
+//			e2.printStackTrace();
+//		}
+//		
+//		String timeInString2 = "01:00:00";
+//		Date dur = null;
+//		try {
+//			dur = time.parse(timeInString2);
+//		} catch (ParseException e1) {
+//			e1.printStackTrace();
+//		}
+//		
+//		String timeInString3 = "00:01:00";
+//		Date len = null;
+//		try {
+//			len = time.parse(timeInString3);
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//
+//		for (int i = 0; i < 24; i++) {
+//			for (int j = 0; j < 60; j++) {
+//				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, j, len, "event", EventType.SCHEDULED);
+//				correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
+//			}
+//			start = DateUtils.sumDates(start, dur, 1);
+//		}
+//		
+//		GeneratorAPI.serializer();
 	}
 
 }
