@@ -6,7 +6,7 @@ import java.util.Date;
  * @author bfeldman 
  * Nov 10, 2015
  */
-public final class ValidateUtils {
+public final class ConvertAndValidateUtils {
 
 
 	private static IProperties iproperties;//maybe static problem to check

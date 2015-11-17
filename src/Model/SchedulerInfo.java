@@ -17,7 +17,7 @@ public abstract class SchedulerInfo {
 	private SchedulerInfoType schInfoType;
 	private Map<UUID, Event> eventMap;
 	private Set<String> eventKeys;
-	private Map<String, Avail> availMap;
+	private Map<String, ProgramAvail> availMap;
 	private boolean[] overlappedMins = new boolean[24 * 60];
 	
 	/**
@@ -32,7 +32,7 @@ public abstract class SchedulerInfo {
 		this.schInfoType = schInfoType;
 		this.eventMap = new HashMap<UUID, Event>();
 		this.eventKeys = new HashSet<String>();
-		this.availMap = new HashMap<String, Avail>();
+		this.availMap = new HashMap<String, ProgramAvail>();
 		Arrays.fill(this.overlappedMins, false);
 	}
 
@@ -49,6 +49,7 @@ public abstract class SchedulerInfo {
 	public void setEventMap(Map<UUID, Event> eventMap) {
 		this.eventMap = eventMap;
 	}
+	
 	public Set<String> getEventKeys() {
 		return eventKeys;
 	}
@@ -56,11 +57,11 @@ public abstract class SchedulerInfo {
 	public void setEventKeys(Set<String> eventKeys) {
 		this.eventKeys = eventKeys;
 	}
-
-	public Map<String, Avail> getAvailMap() {
+	
+	public Map<String, ProgramAvail> getAvailMap() {
 		return availMap;
 	}
-	public void setAvailMap(Map<String, Avail> availMap) {
+	public void setAvailMap(Map<String, ProgramAvail> availMap) {
 		this.availMap = availMap;
 	}
 
@@ -71,7 +72,7 @@ public abstract class SchedulerInfo {
 	public void setSchInfoType(SchedulerInfoType schInfoType) {
 		this.schInfoType = schInfoType;
 	}
-	
+
 	public boolean[] getOverlappedMins() {
 		return overlappedMins;
 	}
