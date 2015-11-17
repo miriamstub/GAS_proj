@@ -161,7 +161,7 @@ public class GeneratorAPI {
 	 * Deserialize the object model.
 	 */
 	public static void deserializer() {
-		CCMSDeserializer.getInstance().run();
+		CCMSDeserializer.getInstance().run("CCMS");
 	}
 
 }

@@ -5,6 +5,6 @@ import Model.SchedulerInfo;
 public interface ISerializer {
 	
 	void run();
-	void createSchedulerInfo(boolean value, SchedulerInfo value1);
+	void createSchedulerInfo(String value, SchedulerInfo value1);
 
 }

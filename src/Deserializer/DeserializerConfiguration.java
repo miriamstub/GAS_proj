@@ -17,6 +17,6 @@ public class DeserializerConfiguration {
 	 public static final int CCMS_STATUSE_CODE_LOCATION = 12;
 	 public static final int CCMS_MIN_PARAMETERS = 13;
 	 public static final int CCMS_MAX_PARAMETERS = 22;
-	 public static final String FOLDER_DESERIALIZER_PATH = "C:\\CCMSDE";
+	 public static final String FOLDER_DESERIALIZER_PATH = "C:\\CCMS\\";
 
 }

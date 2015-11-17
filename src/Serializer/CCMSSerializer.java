@@ -11,6 +11,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import log.Log;
+
+import org.apache.log4j.Logger;
+
+import Deserializer.CCMSDeserializer;
 import Model.Event;
 import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
@@ -20,91 +25,81 @@ import Model.ValidateUtils;
 public class CCMSSerializer implements ISerializer{
 
 	private static CCMSSerializer instance = new CCMSSerializer();
+	Logger log = Log.getInstance();
 
 	private CCMSSerializer(){}
 
 	public static CCMSSerializer getInstance(){
+		
 		return instance;	
 	}
 
-
-
-	public void run(){			
-		for (Map.Entry<String, SchedulerInfo> entry : Manager.getInstance().getFilesList().entrySet())
-		{
-			createSchedulerInfo(true, entry.getValue());			
-		}
-	}
-
-
-	public void createSchedulerInfo(boolean flag, SchedulerInfo schInfoEntry){
-
-		FileWriter writer = null;
-		try {
-			if(flag){//say to create another directory with the dateTime
-
-
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-				Date date = new Date();
-
-				writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + schInfoEntry.getSchInfoName() + dateFormat.format(date) + ".txt");//.SCH
-
-
-
-			}
-			else{//delete the last file and create new one
+	public void run(){	
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		String directoryName = "CCMS";////////////////////////////////////////////////////////////////////////////
+		
+		if(SerializerConfiguration.FLAG_OVERIDE_SCHEDULER){//say to create another directory with the dateTime
+			 directoryName = "CCMS " +  dateFormat.format(date).replace(":", "-").replace("/", "_");////////////////////////////////////////////////////////////////////////////
+			 
+			//create new directory
+			 
+			 File dir = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + directoryName);
+			 
+			 if(dir.mkdir()){
+				 log.info(dir.getName() + " is created!");
+				}else{
+					log.error("Create operation is failed.");
+				}
+			 
+			//delete the last file
 
 				try{
-					File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + schInfoEntry.getSchInfoName());
+					File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + "CCMS");////////////////////////////////////////////////////////////////////////////
 
 					if(file.delete()){
-						System.out.println(file.getName() + " is deleted!");
+						log.info(file.getName() + " is deleted!");
 					}else{
-						System.out.println("Delete operation is failed.");
+						log.error("Delete operation is failed.");
 					}
-
-					writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + schInfoEntry.getSchInfoName() + ".txt");//.SCH
-
 
 				}catch(Exception e){
 
 					e.printStackTrace();
 
 				}
-			}
+		}
+		
+		for (Map.Entry<String, SchedulerInfo> entry : Manager.getInstance().getFilesList().entrySet())
+		{
+			createSchedulerInfo(directoryName, entry.getValue());			
+		}
+	}
+
+	public void createSchedulerInfo(String directoryName, SchedulerInfo schInfoEntry){
+
+		FileWriter writer = null;
+		try {
+			
+			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH  + directoryName + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
 
 			BufferedWriter bufferedWriter = new BufferedWriter(writer);
-			/*bufferedWriter.write("REM Scheduled   ---------Window--------- ----actual-----");
-			bufferedWriter.newLine();
-			bufferedWriter.write("REM Date Time   Start dur brk pos length time    length  pos adname      stat");
-			bufferedWriter.newLine();
-			bufferedWriter.write("REM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC --- ");
-			bufferedWriter.newLine();
-			bufferedWriter.write("REM ----------------------------------------------------------------------------------------------------------------------------");
-			bufferedWriter.newLine();*/
 
-			String event = "REM Scheduled   ---------Window--------- ----actual-----\nREM Date Time   Start dur brk pos length time    length  pos adname      statREM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC ---\nREM ----------------------------------------------------------------------------------------------------------------------------\n";
-
+			String event = "REM Scheduled   ---------Window--------- ----actual-----\r\nREM Date Time   Start dur brk pos length time    length  pos adname      stat\r\nREM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC ---\r\nREM ----------------------------------------------------------------------------------------------------------------------------\r\n";
+			bufferedWriter.write(event);
 
 			//run on all the events 
 			for(Event myEvent : schInfoEntry.getEventMap().values()){
 				ValidateUtils.setIProperties(SchedulerInfoType.CCMS);
-				/*bufferedWriter.write("LOI ");
-				bufferedWriter.write(ValidateUtils.getStringDate(myEvent.getDate()));
-				bufferedWriter.write(" " + ValidateUtils.getStringTime(myEvent.getTime()));
-				bufferedWriter.write(" " + ValidateUtils.getStringStart(myEvent.getWindow().getStart()));
-				bufferedWriter.write(" " + ValidateUtils.getStringDuration(myEvent.getWindow().getDuration()));
-				bufferedWriter.write(" " + ValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3));
-				bufferedWriter.write(" " + ValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3));
-				bufferedWriter.write(" " + ValidateUtils.getStringLength(myEvent.getWindow().getLength()));
-				bufferedWriter.write(" 000000 00000000 000");//actual
-				bufferedWriter.write(" " + myEvent.getAdName());
-				bufferedWriter.write(" 0000 AL TEST    ALU Real Channel Cu test spot" + myEvent.getWindow().getPos());//TODO what happen when the pos bigger than 1 dights?(in fact, it's can be between 1 - 999???
-				bufferedWriter.write("     " + myEvent.getEventType().getValue());
 
-				bufferedWriter.newLine();*/
-
-				event += "LOI " + ValidateUtils.getStringDate(myEvent.getDate()) + " " + ValidateUtils.getStringTime(myEvent.getTime()) + " " + ValidateUtils.getStringStart(myEvent.getWindow().getStart()) + " " + ValidateUtils.getStringDuration(myEvent.getWindow().getDuration()) + " " + ValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3) + " " + ValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3) + " " + ValidateUtils.getStringLength(myEvent.getWindow().getLength()) + " 000000 00000000 000" + " " + myEvent.getAdName() + " 0000 AL TEST    ALU Real Channel Cu test spot" + myEvent.getWindow().getPos() + "     " + myEvent.getEventType().getValue();
+				event = new StringBuffer().append("LOI ").append(ValidateUtils.getStringDate(myEvent.getDate())).append(" ").append(ValidateUtils.getStringTime(myEvent.getTime()))
+						.append(" ").append(ValidateUtils.getStringStart(myEvent.getWindow().getStart())).append(" ").append(ValidateUtils.getStringDuration(myEvent.getWindow().getDuration()))
+						.append(" ").append(ValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3)).append(" ").append(ValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3))
+						.append(" ").append(ValidateUtils.getStringLength(myEvent.getWindow().getLength())).append(" 000000 00000000 000").append(" ").append(myEvent.getAdName())
+						.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos()).append("     ")
+						.append(myEvent.getEventType().getValue()).append("\r\n").toString();
+				
 				bufferedWriter.write(event);
 			}
 
