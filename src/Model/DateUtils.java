@@ -27,28 +27,25 @@ public class DateUtils {
 		}
 		return date;
 	}
-	
-	
-	
-	public static Date sumDates(Date date1, Date date2) {
+
+	public static Date sumDates(Date date1, Date date2, int type) {
 		Calendar dur = Calendar.getInstance();
 		dur.setTime(date2);
 		int hour = dur.get(Calendar.HOUR_OF_DAY);
 		int min = dur.get(Calendar.MINUTE);
 		int sec = dur.get(Calendar.SECOND);
 		int milli = dur.get(Calendar.MILLISECOND);
-		
-		Calendar cal = Calendar.getInstance();
-	    cal.setTime(date1);
 
-	    cal.add(Calendar.HOUR, hour);
-	    cal.add(Calendar.MINUTE, min);
-	    cal.add(Calendar.SECOND, sec);
-	    cal.add(Calendar.MILLISECOND, milli);
-	    
-	   return cal.getTime();
-	}
-	
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date1);
+
+		cal.add(Calendar.HOUR, hour * type);
+		cal.add(Calendar.MINUTE, min * type);
+		cal.add(Calendar.SECOND, sec * type);
+		cal.add(Calendar.MILLISECOND, milli * type);
+
+		return cal.getTime();
+	}	
 	
 	public static String convertDateToString(DateFormats format,Date date){//what happen if we get incorrect format? 
 		return new SimpleDateFormat(format.toString()).format(date);

@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import Model.DateUtils;
 import Model.Event;
 import Model.EventType;
 import Model.SchDay;
@@ -250,7 +251,7 @@ public class APITest extends TestCase {
 				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, j, len, "event", EventType.SCHEDULED);
 				correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
 			}
-			start = APIHelper.sumDates(start, dur, 1);
+			start = DateUtils.sumDates(start, dur, 1);
 		}
 		
 		GeneratorAPI.serializer();
