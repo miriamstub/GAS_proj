@@ -7,14 +7,14 @@ import java.util.Date;
  * @author bfeldman 
  * Nov 10, 2015
  */
-public class Avail {
+public class ProgramAvail{
 	
 	private Date startTime;
 	private Date endTime;
 	private Date leftDuration;
 	
 	
-	public Avail(Date startTime, Date endTime, Date leftDuration) {
+	public ProgramAvail(Date startTime, Date endTime, Date leftDuration) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;

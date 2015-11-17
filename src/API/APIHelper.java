@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import Model.Avail;
+import Model.ProgramAvail;
 import Model.Event;
 import Model.EventType;
 import Model.SchedulerInfo;
@@ -139,7 +139,7 @@ public class APIHelper {
 		if (event.getEventType() == EventType.SCHEDULED) { // avail is relevant only for sceduled.
 
 			// handle avail
-			Avail avail = filesList.get(schedulerInfo.getSchInfoName()).getAvailMap().get(window.getStart().toString() + window.getDuration().toString());
+			ProgramAvail avail = filesList.get(schedulerInfo.getSchInfoName()).getAvailMap().get(window.getStart().toString() + window.getDuration().toString());
 
 			if (avail == null ) { // There is no existing avail - need to create a new one!
 		
@@ -167,7 +167,7 @@ public class APIHelper {
 					Arrays.fill(schInfo.getOverlappedMins(), hours * 60 + minutes, ((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1), true);
 				}
 				
-				avail = new Avail(window.getStart(), windowEndDate, window.getDuration());
+				avail = new ProgramAvail(window.getStart(), windowEndDate, window.getDuration());
 				filesList.get(schedulerInfo.getSchInfoName()).getAvailMap().put(window.getStart().toString() + window.getDuration().toString(), avail);
 			} else { // exist avail
 				if (avail.getLeftDuration().compareTo(window.getLength()) == -1) {
