@@ -47,6 +47,7 @@ public class GeneratorAPI {
 		}
 		return null;
 	}*/
+	// TODO create from API!!
 	
 	public static Event createEvent(Event event, SchedulerInfo schedulerInfo) {
 		if(APIHelper.validateParams(event, schedulerInfo)) {
@@ -63,6 +64,33 @@ public class GeneratorAPI {
 			logger.error("The event does not exist");
 			return null;
 		}
+		// delete key
+
+		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
+			event.setAdName(adName);
+			event.setDate(eventDate);
+			event.setEventType(eventType);
+			event.setTime(eventTime);
+			event.getWindow().setBrk(windowBrk);
+			event.getWindow().setDuration(windowDuration);
+			event.getWindow().setLength(windowLength);
+			event.getWindow().setStart(windowStart);
+			event.getWindow().setPos(windowPos);
+			
+			// add event to the relevant file!!!!
+			// TODO if create new file to delete the event from the old file list.
+		}
+
+		return event;
+	}*/
+	
+	/*public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
+		Event event = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
+		if (event == null) {
+			logger.error("The event does not exist");
+			return null;
+		}
+		// delete key
 
 		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
 			event.setAdName(adName);
@@ -104,6 +132,8 @@ public class GeneratorAPI {
 		if(avail.getLeftDuration() == APIHelper.sumDates(avail.getEndTime(), avail.getStartTime(), -1)) {
 			filesList.get(schInfoName).getAvailMap().remove(window.getStart().getTime() + window.getDuration().getTime());
 		}
+		
+		// TODO remove key
 		
 		// remove the event
 		filesList.get(schInfoName).getEventMap().remove(eventId);

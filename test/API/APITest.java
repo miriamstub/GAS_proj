@@ -16,18 +16,23 @@ import junit.framework.TestCase;
 
 public class APITest extends TestCase {
 	
-	static Manager manager;
+//	static Manager manager;
 	
 	@BeforeClass
     public static void oneTimeSetUp() {
-		manager = Manager.getInstance();
+//		manager = Manager.getInstance();
     }
 	
 	@Test
 	public void testCreate() {
+		Manager manager = Manager.getInstance();
 
 		SimpleDateFormat time = new SimpleDateFormat("hh:mm:ss");
 
+//		BitSet myBitSet = new BitSet(10);
+//		// fills the bitset with ten true values
+//		myBitSet.set(0, 10);
+		
 		String timeInString1 = "10:00:00";
 		Date start = null;
 		try {
@@ -149,7 +154,7 @@ public class APITest extends TestCase {
 			e2.printStackTrace();
 		}
 		
-		// 10:10 - 10:20 - fail
+		// 10:10 - 10:30 - fail
 		Event ovverlapedSceEventNewFile1 = new Event(new Date(), new Date(), startOverlapped, dur, 1, 2, len, "event", EventType.SCHEDULED);
 		ovverlapedSceEventNewFile1 = GeneratorAPI.createEvent(ovverlapedSceEventNewFile1, newSchedulerInfo);
 		System.out.println("reject!!!");
@@ -169,17 +174,17 @@ public class APITest extends TestCase {
 		System.out.println("reject!!!");
 		assertNull(ovverlapedSceEventNewFile2);
 		
-		// 10:10 - 10:30 - fail
+		// 10:10 - 10:40 - fail
 		Event ovverlapedSceEventNewFile3 = new Event(new Date(), new Date(), startOverlapped, endOverlapped, 1, 2, len, "event", EventType.SCHEDULED);
 		ovverlapedSceEventNewFile3 = GeneratorAPI.createEvent(ovverlapedSceEventNewFile3, newSchedulerInfo);
 		System.out.println("reject!!!");
 		assertNull(ovverlapedSceEventNewFile3);
 		
 		// 10:10 - 10:30 - fail
-		Event ovverlapedSceEventNewFile4 = new Event(new Date(), new Date(), start, startOverlapped, 1, 2, len, "event", EventType.SCHEDULED);
-		ovverlapedSceEventNewFile4 = GeneratorAPI.createEvent(ovverlapedSceEventNewFile4, newSchedulerInfo);
-		System.out.println("reject!!!");
-		assertNull(ovverlapedSceEventNewFile4);
+//		Event ovverlapedSceEventNewFile4 = new Event(new Date(), new Date(), start, dur, 1, 2, len, "event", EventType.SCHEDULED);
+//		ovverlapedSceEventNewFile4 = GeneratorAPI.createEvent(ovverlapedSceEventNewFile4, newSchedulerInfo);
+//		System.out.println("reject!!!");
+//		assertNull(ovverlapedSceEventNewFile4);
 		
 		String timeInString7 = "09:50:00";
 		Date startOverlapped2 = null;
@@ -189,11 +194,11 @@ public class APITest extends TestCase {
 			e2.printStackTrace();
 		}
 		
-		// 09:50 - 10:10 - fail
-		Event ovverlapedSceEventNewFile5 = new Event(new Date(), new Date(), startOverlapped2, endOverlapped, 1, 2, len, "event", EventType.SCHEDULED);
-		ovverlapedSceEventNewFile5 = GeneratorAPI.createEvent(ovverlapedSceEventNewFile5, newSchedulerInfo);
-		System.out.println("reject!!!");
-		assertNull(ovverlapedSceEventNewFile5);
+		// 09:50 - 10:20 - fail
+//		Event ovverlapedSceEventNewFile5 = new Event(new Date(), new Date(), startOverlapped2, endOverlapped, 1, 2, len, "event", EventType.SCHEDULED);
+//		ovverlapedSceEventNewFile5 = GeneratorAPI.createEvent(ovverlapedSceEventNewFile5, newSchedulerInfo);
+//		System.out.println("reject!!!");
+//		assertNull(ovverlapedSceEventNewFile5);
 
 		// 09:50 - 09:55 - success!
 		Event correctSceEventNewFile2 = new Event(new Date(), new Date(), startOverlapped2, len, 1, 2, len, "event", EventType.SCHEDULED);
