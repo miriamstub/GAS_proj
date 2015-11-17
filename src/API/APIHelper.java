@@ -134,9 +134,6 @@ public class APIHelper {
 		if (schInfo.getEventKeys().contains(key)) {
 			logger.error("duplicate event");
 			return false;
-		} else {
-			// add new key to set
-			schInfo.getEventKeys().add(key);
 		}
 
 		if (event.getEventType() == EventType.SCHEDULED) { // avail is relevant only for sceduled.
@@ -162,12 +159,12 @@ public class APIHelper {
 				
 //				boolean[] aaa = Arrays.copyOfRange(schInfo.getOverlappedMins(), hours * 60 + minutes, hours1 * 60 + minutes1);
 //				if (Arrays.asList(aaa).contains(true)) {
-				if(schInfo.getOverlappedMins()[hours * 60 + minutes] || schInfo.getOverlappedMins()[hours1 * 60 + minutes1]) {
+				if(schInfo.getOverlappedMins()[hours * 60 + minutes] || schInfo.getOverlappedMins()[((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1 - 1)]) {
 					logger.error("This avail overlaped another avail");
 					return false;
 				} else {
 				// fill the array
-					Arrays.fill(schInfo.getOverlappedMins(), hours * 60 + minutes, hours1 * 60 + minutes1, true);
+					Arrays.fill(schInfo.getOverlappedMins(), hours * 60 + minutes, ((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1), true);
 				}
 				
 				avail = new Avail(window.getStart(), windowEndDate, window.getDuration());
@@ -182,6 +179,9 @@ public class APIHelper {
 			// set the left duration of the avail.
 			avail.setLeftDuration(sumDates(avail.getLeftDuration(), window.getLength(), -1));
 		}
+		
+		// add new key to set
+		schInfo.getEventKeys().add(key);
 
 		return true;
 	}

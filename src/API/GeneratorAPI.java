@@ -58,6 +58,7 @@ public class GeneratorAPI {
 		return null;
  	}
 
+	// TODO modify from API!!
 /*	public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
 		Event event = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
 		if (event == null) {
@@ -84,31 +85,32 @@ public class GeneratorAPI {
 		return event;
 	}*/
 	
-	/*public static Event modifyEvent(UUID eventId, Date eventDate, Date eventTime, String adName, EventType eventType, Date windowStart, Date windowDuration, int windowBrk, int windowPos, Date windowLength, String schInfoName, SchedulerInfoType schInfoType, Date protocolDate, String protocolZone, String protocolChannel) {
-		Event event = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
+	public static Event modifyEvent(Event event, SchedulerInfo schedulerInfo) {
+//		Event event = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
+		// TODO ???		
 		if (event == null) {
 			logger.error("The event does not exist");
 			return null;
 		}
 		// delete key
 
-		if(APIHelper.validateParams(eventTime, eventType, windowLength, windowDuration, windowBrk, windowStart, windowPos, filesList, schInfoName, schInfoType, protocolDate, protocolZone, protocolChannel)) {
-			event.setAdName(adName);
-			event.setDate(eventDate);
-			event.setEventType(eventType);
-			event.setTime(eventTime);
-			event.getWindow().setBrk(windowBrk);
-			event.getWindow().setDuration(windowDuration);
-			event.getWindow().setLength(windowLength);
-			event.getWindow().setStart(windowStart);
-			event.getWindow().setPos(windowPos);
+		if (APIHelper.validateParams(event, schedulerInfo)) {
+			event.setAdName(event.getAdName());
+			event.setDate(event.getDate());
+			event.setEventType(event.getEventType());
+			event.setTime(event.getTime());
+			event.getWindow().setBrk(event.getWindow().getBrk());
+			event.getWindow().setDuration(event.getWindow().getDuration());
+			event.getWindow().setLength(event.getWindow().getLength());
+			event.getWindow().setStart(event.getWindow().getLength());
+			event.getWindow().setPos(event.getWindow().getPos());
 			
 			// add event to the relevant file!!!!
 			// TODO if create new file to delete the event from the old file list.
 		}
 
 		return event;
-	}*/
+	}
 
 	/**
 	 * Delete existing event
