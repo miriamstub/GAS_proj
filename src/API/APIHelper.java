@@ -28,6 +28,12 @@ public class APIHelper {
 	static Logger logger = Log.getInstance();
 	static Map<String, SchedulerInfo> filesList = Manager.getInstance().getFilesList();
 
+	/**
+	 * Validate params of event - the relations between the properties.
+	 * @param {Event} event
+	 * @param {SchedulerInfo} schedulerInfo
+	 * @return {boolean} true if success
+	 */
 	public static boolean validateParams(Event event, SchedulerInfo schedulerInfo) {
 		Window window = event.getWindow();
 		if (window.getLength().compareTo(window.getDuration()) == 1) {
@@ -46,10 +52,7 @@ public class APIHelper {
 
 		// TODO modify file!!
 
-		String key = event.getEventType() == EventType.SCHEDULED ?
-				"sce" + event.getWindow().getBrk() + event.getWindow().getPos() + event.getWindow().getDuration() + event.getWindow().getStart() : 
-				"fill" + event.getTime();
-		
+		String key = generateKey(event.getWindow(), event.getTime(), event.getEventType());
 		if (schInfo.getEventKeys().contains(key)) {
 			logger.error("duplicate event");
 			return false;
@@ -103,5 +106,19 @@ public class APIHelper {
 		schInfo.getEventKeys().add(key);
 
 		return true;
+	}
+	
+	/**
+	 * Generate key to the eventKeys of SchedulerInfo
+	 * @param {Window} window
+	 * @param {Date} eventTime
+	 * @param {EventType} eventType
+	 * @return {String} key - the generated key
+	 */
+	public static String generateKey(Window window, Date eventTime, EventType eventType) {
+		String key = eventType == EventType.SCHEDULED ?
+				"sce" + window.getBrk() + window.getPos() + window.getDuration() + window.getStart() : 
+				"fill" + eventTime;
+		return key;
 	}
 }
