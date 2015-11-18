@@ -81,7 +81,7 @@ public class CCMSSerializer implements ISerializer{
 		FileWriter writer = null;
 		try {
 			
-			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH  + directoryName + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
+			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH  + directoryName + "\\" + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
 
 			BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
