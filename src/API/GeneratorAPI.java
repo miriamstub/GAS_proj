@@ -54,13 +54,7 @@ public class GeneratorAPI {
 			logger.error("The event does not exist");
 			return null;
 		}
-		
-		// check if the file update - delete from old
-		if (filesList.get(schInfoName).compareTo(schedulerInfo) != 0) { // there is new params
-			// remove from old file. not need to create the new file - it done on validateParams.
-			filesList.get(schInfoName).getEventMap().remove(eventId);
-		}
-		
+
 		// check if the uniqe properties update - delete key
 		if (oldEvent.compareTo(event) != 0) {
 			String key = APIHelper.generateKey(oldEvent.getWindow(), oldEvent.getTime(), oldEvent.getEventType());
@@ -68,20 +62,26 @@ public class GeneratorAPI {
 		}
 		
 		if (APIHelper.validateParams(event, schedulerInfo)) {
-			event.setAdName(event.getAdName());
-			event.setDate(event.getDate());
-			event.setEventType(event.getEventType());
-			event.setTime(event.getTime());
-			event.getWindow().setBrk(event.getWindow().getBrk());
-			event.getWindow().setDuration(event.getWindow().getDuration());
-			event.getWindow().setLength(event.getWindow().getLength());
-			event.getWindow().setStart(event.getWindow().getLength());
-			event.getWindow().setPos(event.getWindow().getPos());
+			oldEvent.setAdName(event.getAdName());
+			oldEvent.setDate(event.getDate());
+			oldEvent.setEventType(event.getEventType());
+			oldEvent.setTime(event.getTime());
+			oldEvent.getWindow().setBrk(event.getWindow().getBrk());
+			oldEvent.getWindow().setDuration(event.getWindow().getDuration());
+			oldEvent.getWindow().setLength(event.getWindow().getLength());
+			oldEvent.getWindow().setStart(event.getWindow().getStart());
+			oldEvent.getWindow().setPos(event.getWindow().getPos());
 			
-			// add event to the relevant file
-			filesList.get(schedulerInfo.getSchInfoName()).getEventMap().put(event.getID(), event);
-			logger.info("Modified event: " +event.getID());
-			return event;
+			// check if the file update - delete from old
+			if (filesList.get(schInfoName).compareTo(schedulerInfo) != 0) { // there is new params
+				// remove from old file. not need to create the new file - it done on validateParams.
+				filesList.get(schInfoName).getEventMap().remove(eventId);
+				// add event to the relevant file
+				filesList.get(schedulerInfo.getSchInfoName()).getEventMap().put(oldEvent.getID(), oldEvent);
+			}
+			
+			logger.info("Modified event: " + oldEvent.getID());
+			return oldEvent;
 		}
 
 		return null;
@@ -126,7 +126,7 @@ public class GeneratorAPI {
 	}
 
 	/**
-	 * 
+	 * Delete Day
 	 */
 	public static void deleteDay() {
 
@@ -141,9 +141,10 @@ public class GeneratorAPI {
 	
 	/**
 	 * Deserialize the object model.
+	 * @param folderName
 	 */
-	public static void deserializer() {
-		CCMSDeserializer.getInstance().run("CCMS");
+	public static void deserializer(String folderName) {
+		CCMSDeserializer.getInstance().run(folderName);
 	}
 
 }
