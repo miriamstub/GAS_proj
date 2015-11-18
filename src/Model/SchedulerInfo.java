@@ -11,7 +11,7 @@ import java.util.UUID;
  * @author bfeldman 
  * Nov 10, 2015
  */
-public abstract class SchedulerInfo {
+public abstract class SchedulerInfo implements Comparable<SchedulerInfo> {
 	
 	private String schInfoName;
 	private SchedulerInfoType schInfoType;
@@ -19,12 +19,10 @@ public abstract class SchedulerInfo {
 	private Set<String> eventKeys;
 	private Map<String, ProgramAvail> availMap;
 	private boolean[] overlappedMins = new boolean[24 * 60];
-	
+
 	/**
 	 * @param schInfoName
 	 * @param schInfoType
-	 * @param eventMap
-	 * @param availMap
 	 */
 	public SchedulerInfo(String schInfoName, SchedulerInfoType schInfoType) {
 		super();
@@ -80,4 +78,10 @@ public abstract class SchedulerInfo {
 	public void setOverlappedMins(boolean[] overlappedMins) {
 		this.overlappedMins = overlappedMins;
 	}
+	
+	public int compareTo(SchedulerInfo schedulerInfo) {
+		if (!this.schInfoName.equals(schedulerInfo.schInfoName))
+			return -1;
+		return 0;
+	} 
 }

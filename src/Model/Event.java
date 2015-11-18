@@ -9,7 +9,7 @@ import java.util.*;
  * @author bfeldman 
  * Nov 10, 2015
  */
-public class Event {
+public class Event implements Comparable<Event>{
 
 	private Date date;
 	private Date time;
@@ -88,5 +88,22 @@ public class Event {
 		return "Event [date=" + date + ", time=" + time + ", window=" + window
 				+ ", actual=" + actual + ", adName=" + adName + ", stat="
 				+ stat + ", eventType=" + eventType + ", ID=" + ID + "]";
+	}
+
+	/**
+	 * check only the uniqe params
+	 */
+	public int compareTo(Event event) {
+		if (this.eventType != event.getEventType()) {
+			return -1;
+		}
+		if (event.getEventType() == EventType.SCHEDULED) {
+			if (this.window.getBrk() != event.getWindow().getBrk() || this.window.getDuration() != event.getWindow().getDuration() || this.window.getStart() != event.getWindow().getStart() || this.window.getPos() != event.getWindow().getPos())
+				return -1;
+		} else {
+			if(this.time != event.getTime())
+				return -1;
+		}
+		return 0;
 	}
 }
