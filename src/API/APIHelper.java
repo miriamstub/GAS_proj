@@ -76,15 +76,15 @@ public class APIHelper {
 				int hours1 = calendarEnd.get(Calendar.HOUR_OF_DAY);
 				int minutes1 = calendarEnd.get(Calendar.MINUTE);
 				
-//				boolean[] aaa = Arrays.copyOfRange(schInfo.getOverlappedMins(), hours * 60 + minutes, hours1 * 60 + minutes1);
-//				if (Arrays.asList(aaa).contains(true)) {
-				if(schInfo.getOverlappedMins()[hours * 60 + minutes] || schInfo.getOverlappedMins()[((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1 - 1)]) {
-					logger.error("This avail overlaped another avail");
-					return false;
-				} else {
-				// fill the array
-					Arrays.fill(schInfo.getOverlappedMins(), hours * 60 + minutes, ((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1), true);
+				for (int i = hours * 60 + minutes; i < (((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1 - 1)); i++) {
+					if (schInfo.getOverlappedMins()[i]) {
+						logger.error("This avail overlaped another avail");
+						return false;
+					}
 				}
+
+				// fill the array
+				Arrays.fill(schInfo.getOverlappedMins(), hours * 60 + minutes, ((hours1 * 60 + minutes1) == 0) ? 1439 : (hours1 * 60 + minutes1), true);
 				
 				avail = new ProgramAvail(window.getStart(), windowEndDate, window.getDuration());
 				filesList.get(schedulerInfo.getSchInfoName()).getAvailMap().put(window.getStart().toString() + window.getDuration().toString(), avail);
