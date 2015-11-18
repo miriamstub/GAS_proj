@@ -20,7 +20,11 @@ import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
 import Model.ConvertAndValidateUtils;
 
-
+/**
+ * The CCMS Serialize object read java model and create CCMS protocol.
+ * @author eelmisha
+ *
+ */
 public class CCMSSerializer implements ISerializer{
 
 	private static CCMSSerializer instance = new CCMSSerializer();
@@ -39,7 +43,8 @@ public class CCMSSerializer implements ISerializer{
 		Date date = new Date();
 		String directoryName = "CCMS";////////////////////////////////////////////////////////////////////////////
 		
-		if(SerializerConfiguration.FLAG_OVERIDE_SCHEDULER){//say to create another directory with the dateTime
+		if(SerializerConfiguration.FLAG_OVERIDE_SCHEDULER){ //say to create another directory with the dateTime
+			
 			 directoryName = "CCMS " +  dateFormat.format(date).replace(":", "-").replace("/", "_");////////////////////////////////////////////////////////////////////////////
 			 
 			//create new directory
@@ -108,7 +113,7 @@ public class CCMSSerializer implements ISerializer{
 			String event = "REM Scheduled   ---------Window--------- ----actual-----\r\nREM Date Time   Start dur brk pos length time    length  pos adname      stat\r\nREM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC ---\r\nREM ----------------------------------------------------------------------------------------------------------------------------\r\n";
 			bufferedWriter.write(event);
 
-			//run on all the events 
+			//run on all the events and write them to txt file 
 			for(Event myEvent : schInfoEntry.getEventMap().values()){
 				
 				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);

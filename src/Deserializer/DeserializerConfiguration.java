@@ -1,5 +1,10 @@
 package Deserializer;
 
+/**
+ * Configuration of Deserializer
+ * @author eelmisha
+ *
+ */
 public class DeserializerConfiguration {
 	
 	
