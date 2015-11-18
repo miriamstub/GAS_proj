@@ -1,8 +1,8 @@
 package Model;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -28,9 +28,9 @@ public abstract class SchedulerInfo implements Comparable<SchedulerInfo> {
 		super();
 		this.schInfoName = schInfoName;
 		this.schInfoType = schInfoType;
-		this.eventMap = new HashMap<UUID, Event>();
+		this.eventMap = new LinkedHashMap<UUID, Event>();
 		this.eventKeys = new HashSet<String>();
-		this.availMap = new HashMap<String, ProgramAvail>();
+		this.availMap = new LinkedHashMap<String, ProgramAvail>();
 		Arrays.fill(this.overlappedMins, false);
 	}
 

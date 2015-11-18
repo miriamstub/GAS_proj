@@ -1,6 +1,9 @@
 package API;
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +18,7 @@ import Model.EventType;
 import Model.SchDay;
 import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
+import Serializer.SerializerConfiguration;
 import global.Manager;
 import log.Log;
 
@@ -257,7 +261,7 @@ public class APITest {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		// create one
 		logger.info("Create successful event");
 		Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
@@ -267,7 +271,7 @@ public class APITest {
 		assertNotNull(correctSceEvent);	
 		String oldKey = APIHelper.generateKey(correctSceEvent.getWindow(), correctSceEvent.getTime(), correctSceEvent.getEventType());
 		assertTrue("The key exist on keys set", manager.getFilesList().get("mFile").getEventKeys().contains(oldKey));
-		
+
 		// Modify the key properties
 		logger.info("Modify the key properties");
 		Event modifiedSceEvent = new Event(new Date(), new Date(), start, dur, 2, 1, len, "event", EventType.SCHEDULED);
@@ -366,6 +370,9 @@ public class APITest {
 	@Test
 	public void testAll() {
 		logger.info("\n\n\nTest all - create 1440 successful events");
+		
+		SerializerConfiguration.FLAG_OVERIDE_SCHEDULER = false;
+		
 		String timeInString1 = "00:00:00";
 		Date start = null;
 		try {
@@ -394,14 +401,57 @@ public class APITest {
 
 		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 60; j++) {
-				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, j, len, "event", EventType.SCHEDULED);
+				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, j, len, "event123456", EventType.SCHEDULED);
 				correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
 			}
 			start = DateUtils.sumDates(start, dur, 1);
 		}
 
-		//		GeneratorAPI.serializer();
-		//		GeneratorAPI.deserializer();
-	}
+		System.out.println("start se" + System.nanoTime());
+		GeneratorAPI.serializer();
+		System.out.println("finish se" + System.nanoTime());
+		BufferedReader br = null;
+		String beforeDe = "";
+		String afterDe = "";
+		String sCurrentLine;
 
+		try {
+			br = new BufferedReader(new FileReader("C:\\CCMS\\CCMS\\B1801001.txt"));
+			while ((sCurrentLine = br.readLine()) != null) {
+				beforeDe.concat(sCurrentLine);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null) br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		System.out.println("start de" + System.nanoTime());
+		GeneratorAPI.deserializer("CCMS");
+		System.out.println("finish de" + System.nanoTime());
+		System.out.println("start se" + System.nanoTime());
+		GeneratorAPI.serializer();
+		System.out.println("finish se" + System.nanoTime());
+		try {
+			br = new BufferedReader(new FileReader("C:\\CCMS\\CCMS\\B1801001.txt"));
+			while ((sCurrentLine = br.readLine()) != null) {
+				afterDe.concat(sCurrentLine);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null) br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		// check if the files are equals
+		assertTrue(beforeDe.equals(afterDe));
+	}
 }
