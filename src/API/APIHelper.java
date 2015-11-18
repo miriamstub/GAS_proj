@@ -50,8 +50,6 @@ public class APIHelper {
 			filesList.put(schedulerInfo.getSchInfoName(), schInfo);
 		}
 
-		// TODO modify file!!
-
 		String key = generateKey(event.getWindow(), event.getTime(), event.getEventType());
 		if (schInfo.getEventKeys().contains(key)) {
 			logger.error("duplicate event");
@@ -66,7 +64,6 @@ public class APIHelper {
 			if (avail == null ) { // There is no existing avail - need to create a new one!
 		
 				// check if overlapping
-				// TODO check if work...
 				Date windowEndDate = DateUtils.sumDates(window.getStart(), window.getDuration(), 1);
 				
 				Calendar calendarStart = Calendar.getInstance();
