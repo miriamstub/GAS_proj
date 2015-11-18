@@ -56,12 +56,22 @@ public class CCMSSerializer implements ISerializer{
 
 				try{
 					File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + "CCMS");////////////////////////////////////////////////////////////////////////////
-
-					if(file.delete()){
-						log.info(file.getName() + " is deleted!");
-					}else{
-						log.error("Delete operation is failed.");
-					}
+						
+						//list all the directory contents
+			        	   String files[] = file.list();
+			     
+			        	   for (String temp : files) {
+			        	      //construct the file structure
+			        	      File fileDelete = new File(file, temp);
+			        		 
+			        	      fileDelete.delete();
+			        	   }
+			        	   
+			        	   if(file.delete()){
+								log.info(file.getName() + " is deleted!");
+							}else{
+								log.error("Delete operation is failed.");
+							}					
 
 				}catch(Exception e){
 
