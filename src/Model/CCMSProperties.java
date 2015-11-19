@@ -3,9 +3,14 @@ package Model;
 import java.util.Date;
 
 /**
+ * CCMSProperties.java class
+ * Implements IProperties interface
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class CCMSProperties implements IProperties {
 
 	public final int brkDigits = 3;

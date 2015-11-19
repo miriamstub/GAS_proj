@@ -6,9 +6,22 @@ import global.Manager;
 import java.util.*;
 
 /**
+ * Event.java class
+ * 
+ * @property {Date} date - T&B's approximation of the date when the event will occur.
+ * @property {Date} time - T&B's approximation of the time of day when the event will occur.
+ * @property {Window} window - Qv Window.java.
+ * @property {Actual} actual - Qv Actual.java.
+ * @property {String} adName - a name assigned to the ad during the encoding process.
+ * @property {String} stat - aired status.
+ * @property {EventType} eventType - Qv EventType.java.
+ * @property {UUID} ID - unique identifier.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class Event {
 
 	private Date date;
