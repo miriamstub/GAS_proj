@@ -401,7 +401,7 @@ public class APITest {
 
 		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 60; j++) {
-				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, j, len, "event123456", EventType.SCHEDULED);
+				Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1 + (j / 5), j % 5 + 1, len, "event123456", EventType.SCHEDULED);
 				correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
 			}
 			start = DateUtils.sumDates(start, dur, 1);
