@@ -31,10 +31,10 @@ public class CCMSSerializer implements ISerializer{
 
 	public static CCMSSerializer getInstance(){
 
-		return instance;	
+		return instance; 
 	}
 
-	public void run(){	
+	public void run(){ 
 
 		//delete all the last file in the CCMS directory
 
@@ -46,7 +46,7 @@ public class CCMSSerializer implements ISerializer{
 
 		for (Map.Entry<String, SchedulerInfo> entry : Manager.getInstance().getFilesList().entrySet())
 		{
-			createSchedulerInfo(entry.getValue());			
+			createSchedulerInfo(entry.getValue());   
 		}
 	}
 	
