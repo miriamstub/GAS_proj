@@ -4,9 +4,17 @@ package Model;
 import java.util.Date;
 
 /**
+ * ProgramAvail.java class
+ * An instrumental class to calculate left duration.
+ * @property {Date} startTime - start time of program avail.
+ * @property {Date} endTime - end time of program avail.
+ * @property {Date} leftDuration - the duration that remains for more advertising in this program avail.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class ProgramAvail{
 	
 	private Date startTime;

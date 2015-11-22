@@ -1,9 +1,17 @@
 package Model;
 
-/**
+/** 
+ * SchDay.java class
+ * Contains characteristics of scheduler from this type.
+ * @property {String} date - day in month.
+ * @property {String} zone - representation of the network within a single headend.
+ * @property {String} channel - representation of the headend.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class SchDay extends SchedulerInfo implements Comparable<SchedulerInfo>{
 
 	private String date;
@@ -11,9 +19,9 @@ public class SchDay extends SchedulerInfo implements Comparable<SchedulerInfo>{
 	private String channel;
 	
 	
-	public SchDay(String schInfoName, SchedulerInfoType schInfoType,
+	public SchDay(String schInfoName,
 			String date, String zone, String channel) {
-		super(schInfoName, schInfoType);
+		super(schInfoName);
 		this.date = date;
 		this.zone = zone;
 		this.channel = channel;

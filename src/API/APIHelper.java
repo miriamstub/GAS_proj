@@ -12,7 +12,6 @@ import Model.DateUtils;
 import Model.Event;
 import Model.EventType;
 import Model.SchedulerInfo;
-import Model.SchedulerInfoType;
 import Model.SchDay;
 import Model.Window;
 import global.Manager;
@@ -27,6 +26,12 @@ public class APIHelper {
 
 	static Logger logger = Log.getInstance();
 	static Map<String, SchedulerInfo> filesList = Manager.getInstance().getFilesList();
+	
+	private static final int MIN_BRK = 1;
+	private static final int MAX_BRK = 999;
+	private static final int MIN_POS = 1;
+	private static final int MAX_POS = 999;
+	
 
 	/**
 	 * Validate params of event - the relations between the properties.
@@ -36,6 +41,7 @@ public class APIHelper {
 	 */
 	public static boolean validateParams(Event event, SchedulerInfo schedulerInfo) {
 		Window window = event.getWindow();
+
 		if (window.getLength().compareTo(window.getDuration()) == 1) {
 			logger.error("The event length is bigger than the window duration");
 			return false;
@@ -44,9 +50,7 @@ public class APIHelper {
 		// handle SchedulerInfo
 		SchedulerInfo schInfo = filesList.get(schedulerInfo.getSchInfoName());
 		if (schInfo == null) { // create a new file
-			if(schedulerInfo.getSchInfoType() == SchedulerInfoType.CCMS || schedulerInfo.getSchInfoType() == SchedulerInfoType.SCTE118) {
-				schInfo = new SchDay(schedulerInfo.getSchInfoName(), schedulerInfo.getSchInfoType(), ((SchDay)schedulerInfo).getDate(), ((SchDay)schedulerInfo).getZone(), ((SchDay)schedulerInfo).getChannel());
-			}
+				schInfo = new SchDay(schedulerInfo.getSchInfoName(), ((SchDay)schedulerInfo).getDate(), ((SchDay)schedulerInfo).getZone(), ((SchDay)schedulerInfo).getChannel());
 			filesList.put(schedulerInfo.getSchInfoName(), schInfo);
 		}
 
@@ -56,7 +60,17 @@ public class APIHelper {
 			return false;
 		}
 
-		if (event.getEventType() == EventType.SCHEDULED) { // avail is relevant only for sceduled.
+		if (event.getEventType() == EventType.SCHEDULED) { // avail is relevant only for scheduled.
+			
+			// assert brk & pos value 
+			if (!(window.getBrk() >= MIN_BRK && window.getBrk() <= MAX_BRK)) {
+				logger.error("The event brk is not in the valid range (" + MIN_BRK + "-"+ MAX_BRK +")");
+				return false;
+			}
+			if (!(window.getPos() >= MIN_POS && window.getPos() <= MAX_POS)) {
+				logger.error("The event pos is not in the valid range (" + MIN_POS + "-"+ MAX_POS +")");
+				return false;
+			}
 
 			// handle avail
 			ProgramAvail avail = filesList.get(schedulerInfo.getSchInfoName()).getAvailMap().get(window.getStart().toString() + window.getDuration().toString());

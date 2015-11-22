@@ -3,9 +3,19 @@ package Model;
 import java.util.Date;
 
 /**
+ * Window.java class
+ * Opportunity window for the event.
+ * @property {Date} start -  window's start time - when it'll be active.
+ * @property {Date} dur - duration in minutes that the window is active.
+ * @property {int} brk - break sequence number within window to occur. 
+ * @property {int} pos - position sequence number for event within break.
+ * @property {Date} length - scheduled event length - duration of the ad.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class Window {
 	
 	
@@ -13,14 +23,7 @@ public class Window {
 	private Date duration;
 	private int brk;
 	private int pos;
-	private Date length;
-	
-	
-	private static final int MIN_BRK = 1;
-	private static final int MAX_BRK = 999;
-	private static final int MIN_POS = 1;
-	private static final int MAX_POS = 999;
-	
+	private Date length;	
 	
 	
 	public Window(Date start, Date duration, int brk, int pos, Date length){
@@ -54,9 +57,7 @@ public class Window {
 		return brk;
 	}
 	
-	//@Min(2, message="Invalid email address!")// @RegExp("[0-9]+")
-	public void setBrk(int brk) {//TODO who & how to notify????????????????????????
-		if(brk >= MIN_BRK && brk <= MAX_BRK)
+	public void setBrk(int brk) {
 			this.brk = brk;
 	}
 	
@@ -65,7 +66,6 @@ public class Window {
 	}
 	
 	public void setPos(int pos) {
-		if(pos >= MIN_POS && pos<= MAX_POS)
 			this.pos = pos;
 	}
 	

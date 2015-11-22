@@ -18,7 +18,6 @@ import Model.EventType;
 import Model.SchDay;
 import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
-import Serializer.SerializerConfiguration;
 import global.Manager;
 import log.Log;
 
@@ -72,7 +71,7 @@ public class APITest {
 
 		logger.info("Create successful event of scheduled");
 		Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
-		SchedulerInfo schedulerInfo = new SchDay("fileCreate", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		SchedulerInfo schedulerInfo = new SchDay("fileCreate", "date", "zone", "channel");
 		correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
 		System.out.println("created first event" + correctSceEvent.getID() + "!!!");
 		assertNotNull(correctSceEvent);
@@ -118,7 +117,7 @@ public class APITest {
 		// duplicate event on another file
 		logger.info("Create successfully event that duplicate on another file");
 		Event correctSceEventForNewFile = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
-		SchedulerInfo schedulerInfo2 = new SchDay("file2", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		SchedulerInfo schedulerInfo2 = new SchDay("file2", "date", "zone", "channel");
 		correctSceEventForNewFile = GeneratorAPI.createEvent(correctSceEventForNewFile, schedulerInfo2);
 		System.out.println("created first event" + correctSceEventForNewFile.getID() + "!!!");
 		assertNotNull(correctSceEventForNewFile);
@@ -152,7 +151,7 @@ public class APITest {
 		assertNull(correctSceEvent5);
 
 		// overlapped
-		SchedulerInfo newSchedulerInfo = new SchDay("newFile", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		SchedulerInfo newSchedulerInfo = new SchDay("newFile", "date", "zone", "channel");
 		// 10:00 - 10:20 - success!
 		logger.info("Create first event for checking overlapped");
 		Event correctSceEventNewFile = new Event(new Date(), new Date(), start, dur, 1, 2, len, "event", EventType.SCHEDULED);
@@ -265,7 +264,7 @@ public class APITest {
 		// create one
 		logger.info("Create successful event");
 		Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
-		SchedulerInfo schedulerInfo = new SchDay("mFile", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		SchedulerInfo schedulerInfo = new SchDay("mFile", "date", "zone", "channel");
 		correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
 		System.out.println("created first event1 " + correctSceEvent.getID() + "!!!");
 		assertNotNull(correctSceEvent);	
@@ -285,7 +284,7 @@ public class APITest {
 		// Modify the file
 		logger.info("Modify the file");
 		Event modifiedSceEvent2 = new Event(new Date(), new Date(), start, dur, 1, 2, len, "event", EventType.SCHEDULED);
-		SchedulerInfo modifySchedulerInfo = new SchDay("mFile2", SchedulerInfoType.CCMS, "date2", "zone2", "channel2");
+		SchedulerInfo modifySchedulerInfo = new SchDay("mFile2", "date2", "zone2", "channel2");
 		modifiedSceEvent2 = GeneratorAPI.modifyEvent(correctSceEvent.getID(), schedulerInfo.getSchInfoName(), modifiedSceEvent2, modifySchedulerInfo);
 		System.out.println("modified event " + modifiedSceEvent.getID() + "!!!");
 		assertNotNull(modifiedSceEvent);
@@ -323,7 +322,7 @@ public class APITest {
 		// create one
 		logger.info("Create successful event");
 		Event correctSceEvent = new Event(new Date(), new Date(), start, dur, 1, 1, len, "event", EventType.SCHEDULED);
-		SchedulerInfo schedulerInfo = new SchDay("file", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		SchedulerInfo schedulerInfo = new SchDay("file", "date", "zone", "channel");
 		correctSceEvent = GeneratorAPI.createEvent(correctSceEvent, schedulerInfo);
 		System.out.println("created first event1 " + correctSceEvent.getID() + "!!!");
 		assertNotNull(correctSceEvent);	
@@ -371,8 +370,6 @@ public class APITest {
 	public void testAll() {
 		logger.info("\n\n\nTest all - create 1440 successful events");
 		
-		SerializerConfiguration.FLAG_OVERIDE_SCHEDULER = false;
-		
 		String timeInString1 = "00:00:00";
 		Date start = null;
 		try {
@@ -397,7 +394,7 @@ public class APITest {
 			e.printStackTrace();
 		}
 
-		SchedulerInfo schedulerInfo = new SchDay("B1801001", SchedulerInfoType.CCMS, "date", "zone", "channel");
+		SchedulerInfo schedulerInfo = new SchDay("B1801001", "date", "zone", "channel");
 
 		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 60; j++) {
@@ -408,7 +405,7 @@ public class APITest {
 		}
 
 		System.out.println("start se" + System.nanoTime());
-		GeneratorAPI.serializer();
+		GeneratorAPI.serializer(SchedulerInfoType.CCMS);
 		System.out.println("finish se" + System.nanoTime());
 		BufferedReader br = null;
 		String beforeDe = "";
@@ -431,10 +428,10 @@ public class APITest {
 		}
 
 		System.out.println("start de" + System.nanoTime());
-		GeneratorAPI.deserializer("CCMS");
+		GeneratorAPI.deserializer(SchedulerInfoType.CCMS);//deserilaize by type
 		System.out.println("finish de" + System.nanoTime());
 		System.out.println("start se" + System.nanoTime());
-		GeneratorAPI.serializer();
+		GeneratorAPI.serializer(SchedulerInfoType.CCMS);
 		System.out.println("finish se" + System.nanoTime());
 		try {
 			br = new BufferedReader(new FileReader("C:\\CCMS\\CCMS\\B1801001.txt"));

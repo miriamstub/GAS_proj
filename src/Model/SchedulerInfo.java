@@ -8,26 +8,30 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
+ * SchedulerInfo.java abstract class
+ * Contains basic scheduler's properties.
+ * @property {String} schInfoName - scheduler's name.
+ * @property {Map<UUID, Event>} eventMap - map of all events belong to the scheduler.
+ * @property {Set<String>} eventKeys - set of all events' unique keys. unique key is a string that composed from combination of: window's brk, window's pos, window's duration, window's start, event time & event type.
+ * @property {Map<String, ProgramAvail>} availMap - an instrumental variable to calculate left duration, contains all programs' avails in the scheduler.
+ * @property {boolean[]} overlappedMins - an instrumental variable to avoid overlapping.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public abstract class SchedulerInfo implements Comparable<SchedulerInfo> {
 	
 	private String schInfoName;
-	private SchedulerInfoType schInfoType;
 	private Map<UUID, Event> eventMap;
 	private Set<String> eventKeys;
 	private Map<String, ProgramAvail> availMap;
 	private boolean[] overlappedMins = new boolean[24 * 60];
-
-	/**
-	 * @param schInfoName
-	 * @param schInfoType
-	 */
-	public SchedulerInfo(String schInfoName, SchedulerInfoType schInfoType) {
+	
+	public SchedulerInfo(String schInfoName) {
 		super();
 		this.schInfoName = schInfoName;
-		this.schInfoType = schInfoType;
 		this.eventMap = new LinkedHashMap<UUID, Event>();
 		this.eventKeys = new HashSet<String>();
 		this.availMap = new LinkedHashMap<String, ProgramAvail>();
@@ -61,14 +65,6 @@ public abstract class SchedulerInfo implements Comparable<SchedulerInfo> {
 	}
 	public void setAvailMap(Map<String, ProgramAvail> availMap) {
 		this.availMap = availMap;
-	}
-
-	public SchedulerInfoType getSchInfoType() {
-		return schInfoType;
-	}
-	
-	public void setSchInfoType(SchedulerInfoType schInfoType) {
-		this.schInfoType = schInfoType;
 	}
 
 	public boolean[] getOverlappedMins() {
