@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -42,7 +43,7 @@ public class CCMSDeserializer implements IDeserializer{
 	}
 
 	Date date, time, start, dur, length;
-	int brk, pos;
+	Integer brk, pos;
 	String adName;
 	EventType eventType;
 	Logger log = Log.getInstance();
@@ -61,7 +62,7 @@ public class CCMSDeserializer implements IDeserializer{
 		brk = ConvertAndValidateUtils.getBrk(rowObjs[DeserializerConfiguration.CCMS_BRK_LOCATION]);
 		pos = ConvertAndValidateUtils.getPos(rowObjs[DeserializerConfiguration.CCMS_POS_LOCATION]);
 		length = ConvertAndValidateUtils.getLength(rowObjs[DeserializerConfiguration.CCMS_LENGTH_LOCATION]);
-		adName = ConvertAndValidateUtils.getAdName(rowObjs[DeserializerConfiguration.CCMS_ADNAME_LOCATION]);
+		adName = rowObjs[DeserializerConfiguration.CCMS_ADNAME_LOCATION];
 
 		if(rowObjs.length < DeserializerConfiguration.CCMS_MAX_PARAMETERS){
 			eventType = EventType.SCHEDULED;
@@ -82,22 +83,26 @@ public class CCMSDeserializer implements IDeserializer{
 			fReturn = false;
 			log.error("ActualTime invalid digits");
 		}
-		else if(!ConvertAndValidateUtils.isValidActualLength(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_LENGTH_LOCATION])){
+		if(!ConvertAndValidateUtils.isValidActualLength(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_LENGTH_LOCATION])){
 			fReturn = false;
 			log.error("ActualLength invalid digits");
 		}
 
-		else if(!ConvertAndValidateUtils.isValidActualPos(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_POS_LOCATION])){
+		if(!ConvertAndValidateUtils.isValidActualPos(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_POS_LOCATION])){
 			fReturn = false;
 			log.error("ActualPos invalid digits");
 		}
 
-		else if(!ConvertAndValidateUtils.isValidStatusCode(rowObjs[DeserializerConfiguration.CCMS_STATUSE_CODE_LOCATION])){
+		if(!ConvertAndValidateUtils.isValidStatusCode(rowObjs[DeserializerConfiguration.CCMS_STATUSE_CODE_LOCATION])){
 			fReturn = false;
 			log.error("StatusCode invalid digits");
 		}
+		
+		if (!ConvertAndValidateUtils.isValidAdName(adName)){
+			fReturn = false;
+		}
 
-		else if(!ConvertAndValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType)){
+		if(!ConvertAndValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length, eventType)){
 			fReturn = false;
 			log.error("Invalid event data");
 		}
@@ -131,11 +136,12 @@ public class CCMSDeserializer implements IDeserializer{
 					//create the file
 					Manager.getInstance().addSchedulerInfo(mySchDay);
 
-					log.info("New CCMS Scheduled Info " + mySchDay.getSchInfoName() + " created successfully");
+					log.info("New CCMS Scheduler Info " + mySchDay.getSchInfoName() + " created successfully");
 
 					br = new BufferedReader(new FileReader(fileEntry.getPath()));
 					while ((sCurrentLine = br.readLine()) != null) {
-
+						
+						
 						String[] rowObjs = sCurrentLine.split("\\s+");
 						
                    //"REM" say that it's only title
@@ -145,7 +151,7 @@ public class CCMSDeserializer implements IDeserializer{
 								GeneratorAPI.createEvent(event, mySchDay);
 							}
 							else{
-								log.error("Cant deserialize event: " + date + time + start + dur + brk + pos + length + adName + eventType);
+								log.error("Cant deserialize event: " + Arrays.toString(rowObjs));
 							}     
 
 						}
