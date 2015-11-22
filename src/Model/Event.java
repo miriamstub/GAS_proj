@@ -6,10 +6,24 @@ import global.Manager;
 import java.util.*;
 
 /**
+ * Event.java class
+ * 
+ * @property {Date} date - T&B's approximation of the date when the event will occur.
+ * @property {Date} time - T&B's approximation of the time of day when the event will occur.
+ * @property {Window} window - Qv Window.java.
+ * @property {Actual} actual - Qv Actual.java.
+ * @property {String} adName - a name assigned to the ad during the encoding process.
+ * @property {String} stat - aired status.
+ * @property {EventType} eventType - Qv EventType.java.
+ * @property {UUID} ID - unique identifier.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class Event implements Comparable<Event>{
+
 
 	private Date date;
 	private Date time;
@@ -19,13 +33,13 @@ public class Event implements Comparable<Event>{
 	private String stat;
 	private EventType eventType;
 	private UUID ID;
-	
+
 
 
 	public Event(Date date, Date time, Date start,Date duration, int brk, int pos, Date length,
 			/*String actualTime, String actualLength,String actualPos, String stat,*/
 			String adName, EventType eventType) {
-		
+
 		setDate(date);
 		setTime(time);
 		this.window = new Window(start, duration, brk, pos, length);
@@ -39,16 +53,16 @@ public class Event implements Comparable<Event>{
 		return date;
 	}
 
-	
+
 	public void setDate(Date date) {
 		this.date =date;
 	}
 
-	
+
 	public Date getTime() {
 		return time;
 	}
-	
+
 	public void setTime(Date time) {
 		this.time = time;
 	}

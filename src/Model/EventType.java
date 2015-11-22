@@ -1,8 +1,16 @@
 package Model;
+
 /**
+ * EventType.java Enum
+ * Identifies the spot:
+ * SCHEDULED - being scheduled contractually
+ * FILL - used as filler in order to complete a commercial break. 
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public enum EventType {
 
 	SCHEDULED("Sch."),

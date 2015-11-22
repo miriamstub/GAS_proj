@@ -3,6 +3,13 @@ package Model;
 import java.util.Date;
 
 /**
+ * ConvertAndValidateUtils.java class
+ * Contains functions that serve the deserializing & serializing process:
+ * Convert from string to object type (for deser.. process) and vice versa (for ser.. process)
+ * Validate digits' length.
+ * Validate dates' formats.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
@@ -137,38 +144,11 @@ public final class ConvertAndValidateUtils {
 			sNum  = completeDigits(expectedDigits - sNum.length()) + sNum;
 		return sNum;
 	}
-	
-//	public static String getStringPos(int i){
-//		String a = Integer.toString(i);
-//		if (a.length()< IProperties.posDigits)
-//			a  = completeDigits(IProperties.posDigits-a.length()) + a;
-//		return a;
-//	}
 
 	public static String completeDigits(int missDigits){
 		String[] array0 = {"","0","00","000","0000","00000","000000","0000000","00000000"};
 		return array0[missDigits];
-		//   while(myNumber>0){
-		//		    System.out.print("0");
-		//		    myNumber--;
-		//   }
-
 	}
-
-	//	public static String getConvertString(String value, Date date){
-	//		DateFormats df;
-	//		switch (value) {
-	//		case "date":
-	//			df = iproperties.getDateFormat();
-	//			break;
-	//
-	//		default:
-	//			df = iproperties.getDurationFormat();
-	//			break;
-	//		}
-	//		return DateUtils.convertDateToString(df, date);
-	//	}
-	//	
 
 	public static IProperties getPropertiesClass(SchedulerInfoType schInfoType){
 		IProperties propertiesClass = null;

@@ -10,6 +10,7 @@ import Model.ProgramAvail;
 import Model.DateUtils;
 import Model.Event;
 import Model.SchedulerInfo;
+import Model.SchedulerInfoType;
 import Model.Window;
 import Serializer.CCMSSerializer;
 import global.Manager;
@@ -33,6 +34,7 @@ public class GeneratorAPI {
 	 */
 	public static Event createEvent(Event event, SchedulerInfo schedulerInfo) {
 		if(APIHelper.validateParams(event, schedulerInfo)) {
+			
 			filesList.get(schedulerInfo.getSchInfoName()).getEventMap().put(event.getID(), event);
 			logger.info("Created event: " +event.getID());
 			return event;
@@ -130,21 +132,51 @@ public class GeneratorAPI {
 	 */
 	public static void deleteDay() {
 
-	}
+	}	
 
 	/**
-	 * Serialize the files.
+	 * Deserialize all schedulers.
 	 */
-	public static void serializer() {
-		CCMSSerializer.getInstance().run();
+	public static void deserializer() {
+		CCMSDeserializer.getInstance().run();
+		//118Deserializer.getInstance().run();
 	}
 	
 	/**
-	 * Deserialize the object model.
-	 * @param folderName
+	 * Deserialize schedulers from a certain type.
+	 * @param {SchedulerInfoType} type
 	 */
-	public static void deserializer(String folderName) {
-		CCMSDeserializer.getInstance().run(folderName);
+	public static void deserializer(SchedulerInfoType type) {
+		switch(type){
+		case CCMS:
+			CCMSDeserializer.getInstance().run();
+			break;
+		//case SCTE118:
+			//SCTE118Deserializer.getInstance().run();
+			//break;
+		default:
+			break;
+		}
 	}
-
+	
+	/**
+	 * Serialize all schedulers (Manager.getInstance().getFilesList()) to a certain type.
+	 * the serializer will assert the events' values according to the type,
+	 * if there is an event that not stand in the type demands, this event will reject.
+	 * @param {SchedulerInfoType} type
+	 */
+	public static void serializer(SchedulerInfoType type) {
+		switch(type){
+		case CCMS:
+			CCMSSerializer.getInstance().run();
+			break;
+		//case SCTE118:
+			//SCTE118Serializer.getInstance().run();
+			//break;
+		default:
+			break;
+		}
+	}
+	
+	
 }

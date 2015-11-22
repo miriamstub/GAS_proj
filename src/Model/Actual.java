@@ -3,9 +3,17 @@ package Model;
 import java.util.Date;
 
 /**
+ * Actual.java class
+ * Related to the verification side, whether or not the ad  plays as a reference to Billing for aired ads.
+ * @property {Date} actualTime - actual aired time.
+ * @property {Date} actualLength - actual aired length.
+ * @property {int} actualPos - actual aired position within break.
+ * 
+ * 
  * @author bfeldman 
  * Nov 10, 2015
  */
+
 public class Actual {
 
 	private Date actualTime;
