@@ -33,7 +33,8 @@ public class GeneratorAPI {
 	 */
 	public static Event createEvent(Event event, SchedulerInfo schedulerInfo) {
 		if(APIHelper.validateParams(event, schedulerInfo)) {
-			filesList.get(schedulerInfo.getSchInfoName()).getEventMap().put(event.getID(), event);
+			UUID newUUID = event.generateUUID();
+			filesList.get(schedulerInfo.getSchInfoName()).getEventMap().put(newUUID, event);
 			logger.info("Created event: " +event.getID());
 			return event;
 		}

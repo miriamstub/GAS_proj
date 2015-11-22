@@ -19,7 +19,6 @@ public class Event implements Comparable<Event>{
 	private String stat;
 	private EventType eventType;
 	private UUID ID;
-	
 
 
 	public Event(Date date, Date time, Date start,Date duration, int brk, int pos, Date length,
@@ -31,7 +30,6 @@ public class Event implements Comparable<Event>{
 		this.window = new Window(start, duration, brk, pos, length);
 		setAdName(adName);
 		setEventType(eventType);
-		this.ID = Manager.getUUID();
 	}
 
 
@@ -82,7 +80,6 @@ public class Event implements Comparable<Event>{
 		return ID;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Event [date=" + date + ", time=" + time + ", window=" + window
@@ -105,5 +102,10 @@ public class Event implements Comparable<Event>{
 				return -1;
 		}
 		return 0;
+	}
+	
+	public UUID generateUUID() {
+		this.ID = Manager.getUUID();
+		return this.ID;
 	}
 }
