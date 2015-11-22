@@ -63,11 +63,11 @@ public class APIHelper {
 		if (event.getEventType() == EventType.SCHEDULED) { // avail is relevant only for scheduled.
 			
 			// assert brk & pos value 
-			if (window.getBrk() >= MIN_BRK && window.getBrk() <= MAX_BRK) {
+			if (!(window.getBrk() >= MIN_BRK && window.getBrk() <= MAX_BRK)) {
 				logger.error("The event brk is not in the valid range (" + MIN_BRK + "-"+ MAX_BRK +")");
 				return false;
 			}
-			if (window.getPos() >= MIN_POS && window.getPos() <= MAX_POS) {
+			if (!(window.getPos() >= MIN_POS && window.getPos() <= MAX_POS)) {
 				logger.error("The event pos is not in the valid range (" + MIN_POS + "-"+ MAX_POS +")");
 				return false;
 			}
