@@ -93,6 +93,11 @@ public class CCMSSerializer implements ISerializer{
 				
 				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 
+				//TODO
+				//validae all event's values to match CCMS demands,
+				//if true: write event;
+				//else: log.error
+				
 				event = new StringBuffer().append("LOI ").append(ConvertAndValidateUtils.getStringDate(myEvent.getDate())).append(" ").append(ConvertAndValidateUtils.getStringTime(myEvent.getTime()))
 						.append(" ").append(ConvertAndValidateUtils.getStringStart(myEvent.getWindow().getStart())).append(" ").append(ConvertAndValidateUtils.getStringDuration(myEvent.getWindow().getDuration()))
 						.append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3)).append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3))
@@ -100,7 +105,7 @@ public class CCMSSerializer implements ISerializer{
 						.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos()).append("     ")
 						.append(myEvent.getEventType().getValue()).append("\r\n").toString();
 
-				bufferedWriter.write(event);
+				bufferedWriter.write(event);//TODO maybe to move the write command out of the loop 
 			}
 
 			bufferedWriter.close();

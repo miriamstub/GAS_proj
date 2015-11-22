@@ -12,7 +12,7 @@ package Deserializer;
 
 public interface IDeserializer {
 	
-	void run(String value);
+	void run();
 	boolean validAndConvertEventDataParams(String[] value);
 	boolean validateData(String[] value);
 

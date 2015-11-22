@@ -76,22 +76,22 @@ public class CCMSDeserializer implements IDeserializer{
 			fReturn = false;
 			log.error("ActualTime invalid digits");
 		}
-		else if(!ConvertAndValidateUtils.isValidActualLength(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_LENGTH_LOCATION])){
+		if(!ConvertAndValidateUtils.isValidActualLength(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_LENGTH_LOCATION])){
 			fReturn = false;
 			log.error("ActualLength invalid digits");
 		}
 
-		else if(!ConvertAndValidateUtils.isValidActualPos(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_POS_LOCATION])){
+		if(!ConvertAndValidateUtils.isValidActualPos(rowObjs[DeserializerConfiguration.CCMS_ACTUAL_POS_LOCATION])){
 			fReturn = false;
 			log.error("ActualPos invalid digits");
 		}
 
-		else if(!ConvertAndValidateUtils.isValidStatusCode(rowObjs[DeserializerConfiguration.CCMS_STATUSE_CODE_LOCATION])){
+		if(!ConvertAndValidateUtils.isValidStatusCode(rowObjs[DeserializerConfiguration.CCMS_STATUSE_CODE_LOCATION])){
 			fReturn = false;
 			log.error("StatusCode invalid digits");
 		}
 
-		else if(!ConvertAndValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType)){
+		if(!ConvertAndValidateUtils.notNull(date ,time,start ,dur ,brk,pos ,length,adName ,eventType)){
 			fReturn = false;
 			log.error("Invalid event data");
 		}
@@ -99,7 +99,7 @@ public class CCMSDeserializer implements IDeserializer{
 		return fReturn;
 	}
 
-	public void run(String folderName){
+	public void run(){
 
 		BufferedReader br = null;
 		ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
@@ -107,13 +107,13 @@ public class CCMSDeserializer implements IDeserializer{
 		try {
 
 			String sCurrentLine;
-			File folder = new File(DeserializerConfiguration.FOLDER_DESERIALIZER_PATH + folderName);
+			File folder = new File(DeserializerConfiguration.FOLDER_DESERIALIZER_PATH);
 			Date date = null;
 
 			for (File fileEntry : folder.listFiles()) {                                
 				String schName = fileEntry.getName().substring(0, fileEntry.getName().lastIndexOf("."));
 				if(ConvertAndValidateUtils.isValidSchedulerName(schName)){
-					SchDay mySchDay = new SchDay(schName, SchedulerInfoType.CCMS, schName.substring(0, 3), schName.substring(3, 5),schName.substring(5, 8));
+					SchDay mySchDay = new SchDay(schName, schName.substring(0, 3), schName.substring(3, 5),schName.substring(5, 8));
 					try {
 						//check the file name
 						date = new SimpleDateFormat(DateFormats.MMdd.toString()).parse(Integer.parseInt(fileEntry.getName().substring(0, 1), 16) + fileEntry.getName().substring(1, 3));
@@ -136,13 +136,16 @@ public class CCMSDeserializer implements IDeserializer{
 							if(validAndConvertEventDataParams(rowObjs)){
 								Event event = new Event(date, time, start, dur, brk, pos, length, adName, eventType); 
 								GeneratorAPI.createEvent(event, mySchDay);
-							}      
+							}
+							else{
+								log.error("Cant deserialize event: " + date + time + start + dur + brk + pos + length + adName + eventType);
+							}
 
 						}
 					}
 				}
 				else
-					Log.getInstance().error("Can not create CCMS Scheduled Info " + fileEntry.getName() + ". SchedulerInfo name is invalid");
+					Log.getInstance().error("Can not create CCMS Scheduler Info " + fileEntry.getName() + ". SchedulerInfo name is invalid");
 			}
 
 		} catch (IOException e) {
