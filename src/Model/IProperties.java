@@ -33,19 +33,9 @@ public interface IProperties {
 
 	DateFormats getLengthFormat();
 
-	boolean assertDateDigitsLength(String value);
-
-	boolean assertTimeDigitsLength(String value);
-
-	boolean assertStartDigitsLength(String value);
-
-	boolean assertDurationDigitsLength(String value);
-
 	boolean assertBrkDigitsLength(String value);
 
 	boolean assertPosDigitsLength(String value);
-
-	boolean assertLengthDigitsLength(String value);
 
 	boolean assertActualTimeDigitsLength(String value);
 

@@ -2,6 +2,10 @@ package Model;
 
 import java.util.Date;
 
+import log.Log;
+
+import org.apache.log4j.Logger;
+
 /**
  * ConvertAndValidateUtils.java class
  * Contains functions that serve the deserializing & serializing process:
@@ -15,7 +19,7 @@ import java.util.Date;
  */
 public final class ConvertAndValidateUtils {
 
-
+	static Logger log = Log.getInstance();
 	private static IProperties iproperties;//maybe static problem to check
 
 	public static void setIProperties(SchedulerInfoType schInfoType){
@@ -24,7 +28,7 @@ public final class ConvertAndValidateUtils {
 
 	public static Date getDate(String date) {
 		Date d = DateUtils.getFormattedDate(iproperties.getDateFormat(),date);
-		if(iproperties.assertDateDigitsLength(date) &&  d!=null)
+		if(d!=null)
 			return d;
 		else
 			return null;
@@ -32,7 +36,7 @@ public final class ConvertAndValidateUtils {
 
 	public static Date getTime(String time) {
 		Date d = DateUtils.getFormattedDate(iproperties.getTimeFormat(),time);
-		if(iproperties.assertTimeDigitsLength(time) &&  d!=null)
+		if(d!=null)
 			return d;
 		else
 			return null;
@@ -41,7 +45,7 @@ public final class ConvertAndValidateUtils {
 
 	public static Date getStart(String start) {
 		Date d = DateUtils.getFormattedDate(iproperties.getStartFormat(),start);
-		if(iproperties.assertStartDigitsLength(start) &&  d!=null)
+		if(d!=null)
 			return d;
 		else
 			return null;
@@ -49,7 +53,7 @@ public final class ConvertAndValidateUtils {
 
 	public static Date getDuration(String duration) {
 		Date d = DateUtils.getFormattedDate(iproperties.getDurationFormat(),duration);
-		if(iproperties.assertDurationDigitsLength(duration) &&  d!=null)
+		if(d!=null)
 			return d;
 		else
 			return null;
@@ -58,31 +62,38 @@ public final class ConvertAndValidateUtils {
 	public static Integer getBrk(String brk) {//TODO to validate what happen when convert to int is failed e.g. try to convert "!01"
 		if(iproperties.assertBrkDigitsLength(brk))
 			return Integer.parseInt(brk);
-		else
+		else{
+			log.error("brk invalid digits");		
 			return null;
+		}
 	}
 
 	public static Integer getPos(String pos) {
 		if(iproperties.assertPosDigitsLength(pos))
 			return Integer.parseInt(pos);
-		else
+		else{
+			log.error("pos invalid digits");
 			return null;
+		}
 	}
 
 	public static Date getLength(String length) {
 		Date d = DateUtils.getFormattedDate(iproperties.getLengthFormat(),length);
-		if(iproperties.assertLengthDigitsLength(length) &&  d!=null)
+		if(d!=null)
 			return d;
 		else
 			return null;
 	}
 
-	public static String getAdName(String adName) {
+	public static boolean isValidAdName(String adName) {
 		if(iproperties.assertAdNameDigitsLength(adName))
-			return adName;
-		else
-			return null;
+			return true;
+		else{
+			log.error("adName invalid digits");
+			return false;
+		}
 	}
+
 
 	public static EventType getEventType(String eventType) {//maybe to check if value exist in enum
 		if(iproperties.assertEventTypeDigitsLength(eventType))
@@ -142,6 +153,8 @@ public final class ConvertAndValidateUtils {
 		String sNum = Integer.toString(num);
 		if (sNum.length()< expectedDigits)
 			sNum  = completeDigits(expectedDigits - sNum.length()) + sNum;
+		else if (sNum.length() > expectedDigits)
+			return null;
 		return sNum;
 	}
 
