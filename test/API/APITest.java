@@ -342,7 +342,7 @@ public class APITest {
 
 		// try delete not exist id
 		logger.info("try delete not exist id");
-		assertFalse(GeneratorAPI.deleteEvent(schedulerInfo.getSchInfoName(), Manager.getUUID()));
+		assertFalse(GeneratorAPI.deleteEvent(schedulerInfo.getSchInfoName(), Manager.getInstance().getUUID()));
 
 		// delete him
 		logger.info("delete first event");

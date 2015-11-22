@@ -63,7 +63,7 @@ public class Manager {
 	}
 
 	private static Set<UUID> UUIDPool = new HashSet<UUID>();
-	public static UUID getUUID(){
+	public UUID getUUID(){
 		UUID uuid = UUID.randomUUID();
 		while(!UUIDPool.add(uuid)){
 			uuid = UUID.randomUUID();

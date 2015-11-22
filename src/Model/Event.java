@@ -45,7 +45,7 @@ public class Event implements Comparable<Event>{
 		this.window = new Window(start, duration, brk, pos, length);
 		setAdName(adName);
 		setEventType(eventType);
-		this.ID = Manager.getUUID();
+		this.ID = Manager.getInstance().getUUID();
 	}
 
 
