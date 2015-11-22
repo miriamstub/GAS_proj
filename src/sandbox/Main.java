@@ -15,7 +15,7 @@ public class Main {
 		//completeNumber(2); //
 		//int a = 3;
 		//System.out.print(Integer.toString(a));
-		CCMSDeserializer.getInstance().run("CCMS");
+		CCMSDeserializer.getInstance().run();
 		CCMSSerializer.getInstance().run();
 		
 	

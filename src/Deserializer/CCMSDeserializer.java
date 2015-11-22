@@ -105,7 +105,7 @@ public class CCMSDeserializer implements IDeserializer{
 		return fReturn;
 	}
 
-	public void run(String folderName){
+	public void run(){
 
 		BufferedReader br = null;
 		ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
@@ -113,7 +113,7 @@ public class CCMSDeserializer implements IDeserializer{
 		try {
 
 			String sCurrentLine;
-			File folder = new File(DeserializerConfiguration.FOLDER_DESERIALIZER_PATH + folderName);
+			File folder = new File(DeserializerConfiguration.FOLDER_DESERIALIZER_PATH);
 			Date date = null;
 
 			for (File fileEntry : folder.listFiles()) {                                
@@ -138,7 +138,7 @@ public class CCMSDeserializer implements IDeserializer{
 
 						String[] rowObjs = sCurrentLine.split("\\s+");
 						
-                   //REM say that it's only title
+                   //"REM" say that it's only title
 						if(!rowObjs[0].equals("REM")){
 							if(validAndConvertEventDataParams(rowObjs)){
 								Event event = new Event(date, time, start, dur, brk, pos, length, adName, eventType); 

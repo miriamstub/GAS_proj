@@ -33,80 +33,32 @@ public class CCMSSerializer implements ISerializer{
 	private CCMSSerializer(){}
 
 	public static CCMSSerializer getInstance(){
-		
+
 		return instance;	
 	}
 
 	public void run(){	
-		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		String directoryName = "CCMS";////////////////////////////////////////////////////////////////////////////
-		
-		if(SerializerConfiguration.FLAG_OVERIDE_SCHEDULER){ //say to create another directory with the dateTime
-			
-			 directoryName = "CCMS " +  dateFormat.format(date).replace(":", "-").replace("/", "_");////////////////////////////////////////////////////////////////////////////
-			 
-			//create new directory
-			 
-			 File dir = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + directoryName);
-			 
-			 if(dir.mkdir()){
-				 log.info(dir.getName() + " is created!");
-				}else{
-					log.error("Create operation is failed.");
-				}
-			 
-			/*//delete the last file
 
-				try{
-					File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + "CCMS");////////////////////////////////////////////////////////////////////////////
-						
-						//list all the directory contents
-			        	   String files[] = file.list();
-			     
-			        	   for (String temp : files) {
-			        	      //construct the file structure
-			        	      File fileDelete = new File(file, temp);
-			        		 
-			        	      fileDelete.delete();
-			        	   }
-			        	   
-			        	   if(file.delete()){
-								log.info(file.getName() + " is deleted!");
-							}else{
-								log.error("Delete operation is failed.");
-							}					
+		//delete all the last file in the CCMS directory
 
-				}catch(Exception e){
+		File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH );
 
-					e.printStackTrace();
-
-				}*/
-		}else{
-			
-			//delete all the last file in the CCMS directory//////////////////////////////////////////////////////////////
-			
-			File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + "CCMS");////////////////////////////////////////////////////////////////////////////
-			
-			for (File myFile : file.listFiles()) {
-				myFile.delete();
-	        }
-			
+		for (File myFile : file.listFiles()) {
+			myFile.delete();
 		}
-		
+
 		for (Map.Entry<String, SchedulerInfo> entry : Manager.getInstance().getFilesList().entrySet())
 		{
-			createSchedulerInfo(directoryName, entry.getValue());			
+			createSchedulerInfo(entry.getValue());			
 		}
 	}
 
-	public void createSchedulerInfo(String directoryName, SchedulerInfo schInfoEntry){
+	public void createSchedulerInfo(SchedulerInfo schInfoEntry){
 
 		FileWriter writer = null;
 		try {
-			
-			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH  + directoryName + "\\" + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
+
+			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
 
 			BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
@@ -115,7 +67,7 @@ public class CCMSSerializer implements ISerializer{
 
 			//run on all the events and write them to txt file 
 			for(Event myEvent : schInfoEntry.getEventMap().values()){
-				
+
 				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 
 				event = new StringBuffer().append("LOI ").append(ConvertAndValidateUtils.getStringDate(myEvent.getDate())).append(" ").append(ConvertAndValidateUtils.getStringTime(myEvent.getTime()))

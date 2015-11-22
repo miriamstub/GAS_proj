@@ -3,7 +3,7 @@ package log;
 import org.apache.log4j.Logger;
 
 /**
- * The logger object to all the logs of the project
+ * The logger object to all the logs of the project.
  * @author eelmisha
  *
  */

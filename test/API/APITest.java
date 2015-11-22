@@ -371,8 +371,6 @@ public class APITest {
 	public void testAll() {
 		logger.info("\n\n\nTest all - create 1440 successful events");
 		
-		SerializerConfiguration.FLAG_OVERIDE_SCHEDULER = false;
-		
 		String timeInString1 = "00:00:00";
 		Date start = null;
 		try {
