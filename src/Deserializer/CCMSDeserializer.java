@@ -24,6 +24,12 @@ import Model.ConvertAndValidateUtils;
 /**
  * <img src="file.png" />
  */
+
+/**
+ * The CCMS Deserialize object read CCMS protocol and convert to java model.
+ * @author eelmisha
+ *
+ */
 public class CCMSDeserializer implements IDeserializer{
 
 	private static CCMSDeserializer instance = new CCMSDeserializer();
@@ -131,7 +137,8 @@ public class CCMSDeserializer implements IDeserializer{
 					while ((sCurrentLine = br.readLine()) != null) {
 
 						String[] rowObjs = sCurrentLine.split("\\s+");
-
+						
+                   //REM say that it's only title
 						if(!rowObjs[0].equals("REM")){
 							if(validAndConvertEventDataParams(rowObjs)){
 								Event event = new Event(date, time, start, dur, brk, pos, length, adName, eventType); 

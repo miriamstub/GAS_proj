@@ -20,7 +20,11 @@ import Model.SchedulerInfo;
 import Model.SchedulerInfoType;
 import Model.ConvertAndValidateUtils;
 
-
+/**
+ * The CCMS Serialize object read java model and create CCMS protocol.
+ * @author eelmisha
+ *
+ */
 public class CCMSSerializer implements ISerializer{
 
 	private static CCMSSerializer instance = new CCMSSerializer();
@@ -39,7 +43,8 @@ public class CCMSSerializer implements ISerializer{
 		Date date = new Date();
 		String directoryName = "CCMS";////////////////////////////////////////////////////////////////////////////
 		
-		if(SerializerConfiguration.FLAG_OVERIDE_SCHEDULER){//say to create another directory with the dateTime
+		if(SerializerConfiguration.FLAG_OVERIDE_SCHEDULER){ //say to create another directory with the dateTime
+			
 			 directoryName = "CCMS " +  dateFormat.format(date).replace(":", "-").replace("/", "_");////////////////////////////////////////////////////////////////////////////
 			 
 			//create new directory
@@ -52,22 +57,42 @@ public class CCMSSerializer implements ISerializer{
 					log.error("Create operation is failed.");
 				}
 			 
-			//delete the last file
+			/*//delete the last file
 
 				try{
 					File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + "CCMS");////////////////////////////////////////////////////////////////////////////
-
-					if(file.delete()){
-						log.info(file.getName() + " is deleted!");
-					}else{
-						log.error("Delete operation is failed.");
-					}
+						
+						//list all the directory contents
+			        	   String files[] = file.list();
+			     
+			        	   for (String temp : files) {
+			        	      //construct the file structure
+			        	      File fileDelete = new File(file, temp);
+			        		 
+			        	      fileDelete.delete();
+			        	   }
+			        	   
+			        	   if(file.delete()){
+								log.info(file.getName() + " is deleted!");
+							}else{
+								log.error("Delete operation is failed.");
+							}					
 
 				}catch(Exception e){
 
 					e.printStackTrace();
 
-				}
+				}*/
+		}else{
+			
+			//delete all the last file in the CCMS directory//////////////////////////////////////////////////////////////
+			
+			File file = new File(SerializerConfiguration.FOLDERS_SERIALIZER_PATH + "CCMS");////////////////////////////////////////////////////////////////////////////
+			
+			for (File myFile : file.listFiles()) {
+				myFile.delete();
+	        }
+			
 		}
 		
 		for (Map.Entry<String, SchedulerInfo> entry : Manager.getInstance().getFilesList().entrySet())
@@ -81,14 +106,14 @@ public class CCMSSerializer implements ISerializer{
 		FileWriter writer = null;
 		try {
 			
-			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH  + directoryName + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
+			writer = new FileWriter(SerializerConfiguration.FOLDERS_SERIALIZER_PATH  + directoryName + "\\" + schInfoEntry.getSchInfoName() + ".txt");//.SCH     
 
 			BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
 			String event = "REM Scheduled   ---------Window--------- ----actual-----\r\nREM Date Time   Start dur brk pos length time    length  pos adname      stat\r\nREM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC ---\r\nREM ----------------------------------------------------------------------------------------------------------------------------\r\n";
 			bufferedWriter.write(event);
 
-			//run on all the events 
+			//run on all the events and write them to txt file 
 			for(Event myEvent : schInfoEntry.getEventMap().values()){
 				
 				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);

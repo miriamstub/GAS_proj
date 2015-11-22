@@ -27,7 +27,7 @@ public class GeneratorAPI {
 	static Map<String, SchedulerInfo> filesList = Manager.getInstance().getFilesList();
 	
 	/**
-	 * Create event (called from serelizer)
+	 * Create event (called from serializer)
 	 * @param {Event} event
 	 * @param {SchedulerInfo} schedulerInfo
 	 * @return {Event} event - if success return the event, else return null.
@@ -42,31 +42,51 @@ public class GeneratorAPI {
 		return null;
  	}
 
+	/**
+	 * Modify event (called from serializer)
+	 * @param {String} eventId 
+	 * @param {String} schInfoName
+	 * @param {Event} event - the changed properties
+	 * @param {SchedulerInfo} schedulerInfo - the changed properties
+	 * @return {Event} event - if success return the event, else return null.
+	 */
 	public static Event modifyEvent(UUID eventId, String schInfoName, Event event, SchedulerInfo schedulerInfo) {
-		Event oldEvent = filesList.get(schInfoName).getEventMap().get(eventId); // get the event from his file
+		Event oldEvent = filesList.get(schInfoName).getEventMap().get(eventId);
 		if (oldEvent == null) {
 			logger.error("The event does not exist");
 			return null;
 		}
-		
-		// delete key
 
+		// check if the uniqe properties update - delete key
+		if (oldEvent.compareTo(event) != 0) {
+			String key = APIHelper.generateKey(oldEvent.getWindow(), oldEvent.getTime(), oldEvent.getEventType());
+			filesList.get(schInfoName).getEventKeys().remove(key);
+		}
+		
 		if (APIHelper.validateParams(event, schedulerInfo)) {
-			event.setAdName(event.getAdName());
-			event.setDate(event.getDate());
-			event.setEventType(event.getEventType());
-			event.setTime(event.getTime());
-			event.getWindow().setBrk(event.getWindow().getBrk());
-			event.getWindow().setDuration(event.getWindow().getDuration());
-			event.getWindow().setLength(event.getWindow().getLength());
-			event.getWindow().setStart(event.getWindow().getLength());
-			event.getWindow().setPos(event.getWindow().getPos());
+			oldEvent.setAdName(event.getAdName());
+			oldEvent.setDate(event.getDate());
+			oldEvent.setEventType(event.getEventType());
+			oldEvent.setTime(event.getTime());
+			oldEvent.getWindow().setBrk(event.getWindow().getBrk());
+			oldEvent.getWindow().setDuration(event.getWindow().getDuration());
+			oldEvent.getWindow().setLength(event.getWindow().getLength());
+			oldEvent.getWindow().setStart(event.getWindow().getStart());
+			oldEvent.getWindow().setPos(event.getWindow().getPos());
 			
-			// add event to the relevant file!!!!
-			// TODO if create new file to delete the event from the old file list.
+			// check if the file update - delete from old
+			if (filesList.get(schInfoName).compareTo(schedulerInfo) != 0) { // there is new params
+				// remove from old file. not need to create the new file - it done on validateParams.
+				filesList.get(schInfoName).getEventMap().remove(eventId);
+				// add event to the relevant file
+				filesList.get(schedulerInfo.getSchInfoName()).getEventMap().put(oldEvent.getID(), oldEvent);
+			}
+			
+			logger.info("Modified event: " + oldEvent.getID());
+			return oldEvent;
 		}
 
-		return event;
+		return null;
 	}
 
 	/**
@@ -74,6 +94,7 @@ public class GeneratorAPI {
 	 * Called from serialize / API
 	 * @param {String} schInfoName
 	 * @param {UUID} eventId
+	 * @return {boolean} true if success, false if the event not exist.
 	 */
 	public static boolean deleteEvent(String schInfoName, UUID eventId) {
 		Event event = filesList.get(schInfoName).getEventMap().get(eventId);
@@ -94,11 +115,11 @@ public class GeneratorAPI {
 		
 		// remove key
 		String key = APIHelper.generateKey(event.getWindow(), event.getTime(), event.getEventType());
-		 filesList.get(schInfoName).getEventKeys().remove(key);
+		filesList.get(schInfoName).getEventKeys().remove(key);
+		 
 		// remove the event
-		Manager.getInstance().deleteEvent(schInfoName,eventId);
-		
-		
+		Manager.getInstance().deleteEvent(schInfoName, eventId);
+
 		// if the event is the last on this file - delete the file also.
 		if (filesList.get(schInfoName).getEventMap().size() == 0) {
 			filesList.remove(schInfoName);
@@ -107,7 +128,7 @@ public class GeneratorAPI {
 	}
 
 	/**
-	 * 
+	 * Delete Day
 	 */
 	public static void deleteDay() {
 

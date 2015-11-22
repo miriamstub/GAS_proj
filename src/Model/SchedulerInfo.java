@@ -1,8 +1,8 @@
 package Model;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -21,7 +21,7 @@ import java.util.UUID;
  * Nov 10, 2015
  */
 
-public abstract class SchedulerInfo {
+public abstract class SchedulerInfo implements Comparable<SchedulerInfo> {
 	
 	private String schInfoName;
 	private Map<UUID, Event> eventMap;
@@ -32,9 +32,9 @@ public abstract class SchedulerInfo {
 	public SchedulerInfo(String schInfoName) {
 		super();
 		this.schInfoName = schInfoName;
-		this.eventMap = new HashMap<UUID, Event>();
+		this.eventMap = new LinkedHashMap<UUID, Event>();
 		this.eventKeys = new HashSet<String>();
-		this.availMap = new HashMap<String, ProgramAvail>();
+		this.availMap = new LinkedHashMap<String, ProgramAvail>();
 		Arrays.fill(this.overlappedMins, false);
 	}
 
@@ -74,4 +74,10 @@ public abstract class SchedulerInfo {
 	public void setOverlappedMins(boolean[] overlappedMins) {
 		this.overlappedMins = overlappedMins;
 	}
+	
+	public int compareTo(SchedulerInfo schedulerInfo) {
+		if (!this.schInfoName.equals(schedulerInfo.schInfoName))
+			return -1;
+		return 0;
+	} 
 }
