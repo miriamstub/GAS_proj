@@ -6,9 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 import log.Log;
@@ -52,6 +49,30 @@ public class CCMSSerializer implements ISerializer{
 			createSchedulerInfo(entry.getValue());			
 		}
 	}
+	
+	String pos, brk;
+	public boolean validateData(Event event) {
+
+		boolean fReturn = true;
+
+		brk = ConvertAndValidateUtils.completeIntToString(event.getWindow().getBrk(),3);
+		pos = ConvertAndValidateUtils.completeIntToString(event.getWindow().getPos(),3);
+		
+		if(brk==null) {
+			fReturn = false;
+			log.error("Event's brk invalid digits");
+		}
+		
+		if(pos ==null) {
+			fReturn = false;
+			log.error("Event's pos invalid digits");
+		}
+		
+		if(!ConvertAndValidateUtils.isValidAdName(event.getAdName()))
+			fReturn = false;
+		
+		return fReturn;
+	}
 
 	public void createSchedulerInfo(SchedulerInfo schInfoEntry){
 
@@ -70,19 +91,19 @@ public class CCMSSerializer implements ISerializer{
 
 				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 				
-                //TODO
-				//validae all event's values to match CCMS demands,
-				//if true: write event;
-				//else: log.error
-				
-				event = new StringBuffer().append("LOI ").append(ConvertAndValidateUtils.getStringDate(myEvent.getDate())).append(" ").append(ConvertAndValidateUtils.getStringTime(myEvent.getTime()))
-						.append(" ").append(ConvertAndValidateUtils.getStringStart(myEvent.getWindow().getStart())).append(" ").append(ConvertAndValidateUtils.getStringDuration(myEvent.getWindow().getDuration()))
-						.append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3)).append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3))
-						.append(" ").append(ConvertAndValidateUtils.getStringLength(myEvent.getWindow().getLength())).append(" 000000 00000000 000").append(" ").append(myEvent.getAdName())
-						.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos()).append("     ")
-						.append(myEvent.getEventType().getValue()).append("\r\n").toString();
+				if(validateData(myEvent)){
+					event = new StringBuffer().append("LOI ").append(ConvertAndValidateUtils.getStringDate(myEvent.getDate())).append(" ").append(ConvertAndValidateUtils.getStringTime(myEvent.getTime()))
+							.append(" ").append(ConvertAndValidateUtils.getStringStart(myEvent.getWindow().getStart())).append(" ").append(ConvertAndValidateUtils.getStringDuration(myEvent.getWindow().getDuration()))
+							.append(" ").append(brk).append(" ").append(pos)
+							.append(" ").append(ConvertAndValidateUtils.getStringLength(myEvent.getWindow().getLength())).append(" 000000 00000000 000").append(" ").append(myEvent.getAdName())
+							.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos()).append("     ")
+							.append(myEvent.getEventType().getValue()).append("\r\n").toString();
 
-				bufferedWriter.write(event);//TODO maybe to move the write command out of the loop 
+					bufferedWriter.write(event);//TODO maybe to move the write command out of the loop 
+					log.info("Serialize event: " + myEvent.getID() + " Successfully");
+				}
+				else
+					log.error("Can't serialize event: " + myEvent.getID());
 			}
 
 			bufferedWriter.close();
