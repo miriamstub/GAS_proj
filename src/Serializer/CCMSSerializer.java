@@ -110,24 +110,28 @@ public class CCMSSerializer implements ISerializer{
 
 			BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
-			String event = "REM Scheduled   ---------Window--------- ----actual-----\r\nREM Date Time   Start dur brk pos length time    length  pos adname      stat\r\nREM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC ---\r\nREM ----------------------------------------------------------------------------------------------------------------------------\r\n";
-			bufferedWriter.write(event);
+			StringBuffer event = new StringBuffer("REM Scheduled   ---------Window--------- ----actual-----\r\nREM Date Time   Start dur brk pos length time    length  pos adname      stat\r\nREM MMDD HHMMSS HHMM HHMM --- --- HHMMSS HHMMSS HHMMSSCC ---\r\nREM ----------------------------------------------------------------------------------------------------------------------------\r\n");
 
 			//run on all the events and write them to txt file 
 			for(Event myEvent : schInfoEntry.getEventMap().values()){
 				
 				ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 
-				event = new StringBuffer().append("LOI ").append(ConvertAndValidateUtils.getStringDate(myEvent.getDate())).append(" ").append(ConvertAndValidateUtils.getStringTime(myEvent.getTime()))
-						.append(" ").append(ConvertAndValidateUtils.getStringStart(myEvent.getWindow().getStart())).append(" ").append(ConvertAndValidateUtils.getStringDuration(myEvent.getWindow().getDuration()))
-						.append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3)).append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3))
-						.append(" ").append(ConvertAndValidateUtils.getStringLength(myEvent.getWindow().getLength())).append(" 000000 00000000 000").append(" ").append(myEvent.getAdName())
-						.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos()).append("     ")
+				event.append("LOI ").append(ConvertAndValidateUtils.getStringDate(myEvent.getDate()))
+						.append(" ").append(ConvertAndValidateUtils.getStringTime(myEvent.getTime()))
+						.append(" ").append(ConvertAndValidateUtils.getStringStart(myEvent.getWindow().getStart()))
+						.append(" ").append(ConvertAndValidateUtils.getStringDuration(myEvent.getWindow().getDuration()))
+						.append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getBrk(),3))
+						.append(" ").append(ConvertAndValidateUtils.completeIntToString(myEvent.getWindow().getPos(),3))
+						.append(" ").append(ConvertAndValidateUtils.getStringLength(myEvent.getWindow().getLength()))
+						.append(" 000000 00000000 000")
+						.append(" ").append(myEvent.getAdName())
+						.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos())
+						.append("     ")
 						.append(myEvent.getEventType().getValue()).append("\r\n").toString();
-
-				bufferedWriter.write(event);
 			}
 
+			bufferedWriter.write(event.toString());
 			bufferedWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
