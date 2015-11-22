@@ -7,7 +7,7 @@ package Serializer;
  */
 
 public class SerializerConfiguration {
-	
-	public static final String FOLDERS_SERIALIZER_PATH = "C:\\CCMS\\CCMS\\";
+ 
+ public static final String FOLDERS_SERIALIZER_PATH = "C:\\CCMS\\CCMS\\";
 
 }
