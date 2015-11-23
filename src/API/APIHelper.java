@@ -139,7 +139,7 @@ public class APIHelper {
 	 */
 	public static String generateKey(Window window, Date eventTime, EventType eventType) {
 		String key = eventType == EventType.SCHEDULED ?
-				"sce" + window.getBrk() + window.getPos() + window.getDuration() + window.getStart() : 
+				"sch" + window.getBrk() + window.getPos() + window.getDuration() + window.getStart() : 
 					"fill" + eventTime;
 				return key;
 	}
