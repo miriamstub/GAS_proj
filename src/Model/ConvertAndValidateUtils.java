@@ -21,6 +21,7 @@ public final class ConvertAndValidateUtils {
 
 	static Logger log = Log.getInstance();
 	private static IProperties iproperties;//maybe static problem to check
+	static String numericRgx = "\\d+";//"[0-9]+"
 
 	public static void setIProperties(SchedulerInfoType schInfoType){
 		iproperties = getPropertiesClass(schInfoType);
@@ -59,8 +60,8 @@ public final class ConvertAndValidateUtils {
 			return null;
 	}
 
-	public static Integer getBrk(String brk) {//TODO to validate what happen when convert to int is failed e.g. try to convert "!01"
-		if(iproperties.assertBrkDigitsLength(brk))
+	public static Integer getBrk(String brk) {
+		if(iproperties.assertBrkDigitsLength(brk) && brk.matches(numericRgx))
 			return Integer.parseInt(brk);
 		else{
 			log.error("brk invalid digits");		
@@ -69,7 +70,7 @@ public final class ConvertAndValidateUtils {
 	}
 	
 	public static Integer getPos(String pos) {
-		if(iproperties.assertPosDigitsLength(pos))
+		if(iproperties.assertPosDigitsLength(pos) && pos.matches(numericRgx))
 			return Integer.parseInt(pos);
 		else{
 			log.error("pos invalid digits");
