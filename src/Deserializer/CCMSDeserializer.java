@@ -112,6 +112,8 @@ public class CCMSDeserializer implements IDeserializer{
 
 	public void run(){
 
+		Manager.getInstance().getFilesList().clear();
+		
 		BufferedReader br = null;
 		ConvertAndValidateUtils.setIProperties(SchedulerInfoType.CCMS);
 
