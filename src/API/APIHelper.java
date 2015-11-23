@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import Model.ConvertAndValidateUtils;
+import Model.DateFormats;
 import Model.ProgramAvail;
 import Model.DateUtils;
 import Model.Event;
@@ -41,8 +42,13 @@ public class APIHelper {
 	 * @return {boolean} true if success
 	 */
 	public static boolean validateParams(Event event, SchedulerInfo schedulerInfo) {
-		
-		//TODO - assert schedulerInfo not null
+
+		// assert schedulerInfo not null
+		// TODO ??
+		if(!ConvertAndValidateUtils.notNull(schedulerInfo.getSchInfoName())){
+				logger.error("Event contains null value/s");
+				return false;
+		}
 		
 		//assert event values are not null
 		if(!ConvertAndValidateUtils.notNull(event.getDate() ,event.getTime(),event.getWindow(),event.getAdName() ,event.getEventType())){
@@ -54,6 +60,12 @@ public class APIHelper {
 		//assert window values are not null
 		if(!ConvertAndValidateUtils.notNull(window.getDuration(), window.getLength(), window.getStart())){
 			logger.error("Window's event contains null value/s");
+			return false;
+		}
+
+		Date anotherDate = DateUtils.getFormattedDate(DateFormats.HHmmss, "000005");
+		if (event.getWindow().getLength().compareTo(anotherDate) != -1) {
+			logger.error("Event length must be minimun 5 sec");
 			return false;
 		}
 
