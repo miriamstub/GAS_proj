@@ -64,7 +64,7 @@ public class APIHelper {
 		}
 
 		Date anotherDate = DateUtils.getFormattedDate(DateFormats.HHmmss, "000005");
-		if (event.getWindow().getLength().compareTo(anotherDate) != -1) {
+		if (event.getWindow().getLength().compareTo(anotherDate) == -1) {
 			logger.error("Event length must be minimun 5 sec");
 			return false;
 		}
