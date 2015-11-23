@@ -1,5 +1,6 @@
 package Model;
 
+
 /**
  * EventType.java Enum
  * Identifies the spot:
@@ -13,31 +14,32 @@ package Model;
 
 public enum EventType {
 
-	SCHEDULED("Sch."),
-	FILL("Fill");
+	SCHEDULED("Sch.","SCHED"),
+	FILL("Fill","FILL");
+	//	BONUS("BONUS")
 
-	private final String value;
 
-	EventType(String value) {
-		this.value = value;
+	private final String CCMSvalue;
+	private final String SCTE118value;
+
+
+	EventType(String CCMSvaluep, String SCTE118valuep) {
+		this.CCMSvalue = CCMSvaluep;
+		this.SCTE118value = SCTE118valuep;
 	}
 
-	public String getValue() {
-		return value;
+	public String getCCMsValue() {
+		return CCMSvalue;
 	}
 
-	public static String getNameByValue(String value) {
+	public String getSCTE118value() {
+		return SCTE118value;
+	}
+
+	public static EventType getNameByValue(String value) {
 		for(EventType e : EventType.values()){
-			if(value.equals(e.value)) return e.name();
+			if(value.equals(e.CCMSvalue) || value.equals(e.SCTE118value)) return e;
 		}
 		return null;
 	}
-
-	@Override
-	public String toString() {
-		return this.getValue();
-	}
-
-
-
 }

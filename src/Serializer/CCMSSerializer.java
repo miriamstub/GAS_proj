@@ -97,7 +97,7 @@ public class CCMSSerializer implements ISerializer{
 							.append(" ").append(brk).append(" ").append(pos)
 							.append(" ").append(ConvertAndValidateUtils.getStringLength(myEvent.getWindow().getLength())).append(" 000000 00000000 000").append(" ").append(myEvent.getAdName())
 							.append(" 0000 AL TEST    ALU Real Channel Cu test spot").append(myEvent.getWindow().getPos()).append("     ")
-							.append(myEvent.getEventType().getValue()).append("\r\n").toString();
+							.append(myEvent.getEventType().getCCMsValue()).append("\r\n").toString();
 
 					bufferedWriter.write(event);//TODO maybe to move the write command out of the loop 
 					log.info("Serialize event: " + myEvent.getID() + " Successfully");

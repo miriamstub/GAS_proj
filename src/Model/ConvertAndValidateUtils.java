@@ -67,7 +67,7 @@ public final class ConvertAndValidateUtils {
 			return null;
 		}
 	}
-
+	
 	public static Integer getPos(String pos) {
 		if(iproperties.assertPosDigitsLength(pos))
 			return Integer.parseInt(pos);
@@ -94,12 +94,16 @@ public final class ConvertAndValidateUtils {
 		}
 	}
 
-
-	public static EventType getEventType(String eventType) {//maybe to check if value exist in enum
-		if(iproperties.assertEventTypeDigitsLength(eventType))
-			return EventType.valueOf(EventType.getNameByValue(eventType));
-		else
+	
+	public static EventType getEventType(String eventType) {
+		EventType et = EventType.getNameByValue(eventType);
+		if(iproperties.assertEventTypeDigitsLength(eventType) && et != null){
+			return et;
+		}
+		else{
+			log.error("Event Type invalid");
 			return null;
+		}
 	}
 
 	public static boolean isValidStatusCode(String statusCode) {
