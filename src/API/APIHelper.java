@@ -45,13 +45,17 @@ public class APIHelper {
 		//TODO - assert schedulerInfo not null
 		
 		//assert event values are not null
-		if(!ConvertAndValidateUtils.notNull(event.getDate() ,event.getTime(),event.getWindow(),event.getAdName() ,event.getEventType()))
+		if(!ConvertAndValidateUtils.notNull(event.getDate() ,event.getTime(),event.getWindow(),event.getAdName() ,event.getEventType())){
+			logger.error("Event contains null value/s");
 			return false;
+		}
 		
 		Window window = event.getWindow();
 		//assert window values are not null
-		if(!ConvertAndValidateUtils.notNull(window.getDuration(), window.getLength(), window.getStart()))
+		if(!ConvertAndValidateUtils.notNull(window.getDuration(), window.getLength(), window.getStart())){
+			logger.error("Window's event contains null value/s");
 			return false;
+		}
 
 		if (window.getLength().compareTo(window.getDuration()) == 1) {
 			logger.error("The event length is bigger than the window duration");
